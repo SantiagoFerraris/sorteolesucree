@@ -1,1 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorteo Instagram</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
+:root {
+  --ig-purple: #833ab4;
+  --ig-red:    #fd1d1d;
+  --ig-orange: #fcb045;
+  --grad:      linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  --grad-soft: linear-gradient(135deg, #f5f0ff 0%, #fff0f0 50%, #fffaf0 100%);
+  --surface:   #ffffff;
+  --bg:        #fafafa;
+  --border:    #e5e7eb;
+  --text:      #111111;
+  --muted:     #6b7280;
+  --radius:    16px;
+  --radius-sm: 10px;
+  --shadow:    0 2px 12px rgba(0,0,0,.07);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── Header ── */
+.header {
+  background: var(--grad);
+  padding: 28px 20px 24px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(255,255,255,.18) 0%, transparent 60%);
+}
+.header-logo { font-size:26px; font-weight:800; letter-spacing:-1px; position:relative; }
+.header-logo em { font-style:normal; opacity:.7; font-weight:400; }
+.header-sub  { font-size:13px; opacity:.85; margin-top:4px; position:relative; }
+
+/* ── Container ── */
+.container { max-width:660px; margin:0 auto; padding:24px 16px 80px; }
+
+/* ── Steps ── */
+.steps {
+  display:flex; gap:0;
+  background:white; border-radius:999px;
+  padding:5px; border:1px solid var(--border);
+  margin-bottom:24px; box-shadow:var(--shadow);
+}
+.step-btn {
+  flex:1; padding:9px 4px; border-radius:999px; border:none;
+  background:transparent; font-family:inherit; font-size:12px;
+  font-weight:600; cursor:pointer; color:var(--muted);
+  transition:all .25s; display:flex; align-items:center;
+  justify-content:center; gap:5px;
+}
+.step-btn.active { background:var(--grad); color:white; }
+.step-btn.done   { color:#16a34a; }
+.step-num {
+  width:18px; height:18px; border-radius:50%;
+  background:var(--border); color:var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; flex-shrink:0;
+}
+.step-btn.active .step-num { background:rgba(255,255,255,.3); color:white; }
+.step-btn.done   .step-num { background:#dcfce7; color:#16a34a; }
+
+/* ── Card ── */
+.card {
+  background:white; border-radius:var(--radius);
+  border:1px solid var(--border); padding:20px;
+  margin-bottom:14px; box-shadow:var(--shadow);
+}
+.card-head {
+  display:flex; align-items:center; gap:10px; margin-bottom:4px;
+}
+.card-icon {
+  width:30px; height:30px; border-radius:9px;
+  background:var(--grad-soft); display:flex;
+  align-items:center; justify-content:center; font-size:15px; flex-shrink:0;
+}
+.card-title  { font-size:15px; font-weight:700; }
+.card-desc   { font-size:13px; color:var(--muted); margin:6px 0 14px; line-height:1.5; }
+
+/* ── URL input row ── */
+.url-row { display:flex; gap:8px; }
+.url-row input { flex:1; }
+
+/* ── Inputs ── */
+label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; }
+input[type=text], input[type=number], textarea, select {
+  width:100%; padding:11px 14px; border:1.5px solid var(--border);
+  border-radius:var(--radius-sm); font-family:inherit; font-size:14px;
+  background:#f9f9f9; color:var(--text); transition:border-color .2s; outline:none;
+}
+input:focus, textarea:focus { border-color:#833ab4; background:white; }
+textarea { resize:vertical; min-height:110px; line-height:1.6; }
+
+/* ── Post preview ── */
+.post-preview {
+  display:none; margin-top:14px;
+  background:var(--grad-soft); border-radius:var(--radius-sm);
+  border:1px solid #e9d5ff; padding:12px 14px;
+  gap:12px; align-items:center;
+}
+.post-preview.show { display:flex; }
+.post-thumb {
+  width:52px; height:52px; border-radius:8px;
+  object-fit:cover; flex-shrink:0; background:#e5e7eb;
+}
+.post-thumb-placeholder {
+  width:52px; height:52px; border-radius:8px;
+  background:var(--grad); display:flex;
+  align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.post-info { flex:1; min-width:0; }
+.post-owner { font-size:13px; font-weight:700; }
+.post-caption { font-size:12px; color:var(--muted); margin-top:2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.post-stats { font-size:11px; color:var(--muted); margin-top:4px; display:flex; gap:10px; }
+
+/* ── Loading state ── */
+.loading-bar {
+  display:none; margin-top:12px; padding:14px;
+  background:#f0f4ff; border-radius:var(--radius-sm);
+  border:1px solid #c7d2fe; text-align:center;
+}
+.loading-bar.show { display:block; }
+.loading-bar p { font-size:13px; color:#3730a3; font-weight:500; }
+.progress-track {
+  height:4px; background:#c7d2fe; border-radius:99px;
+  margin-top:8px; overflow:hidden;
+}
+.progress-fill {
+  height:100%; width:0%;
+  background:var(--grad); border-radius:99px;
+  transition:width .4s ease;
+}
+
+/* ── Error state ── */
+.error-box {
+  display:none; margin-top:12px; padding:12px 14px;
+  background:#fef2f2; border-radius:var(--radius-sm);
+  border:1px solid #fca5a5;
+}
+.error-box.show { display:block; }
+.error-box p { font-size:13px; color:#dc2626; line-height:1.5; }
+.error-box .error-hint { font-size:12px; color:#ef4444; margin-top:6px; opacity:.8; }
+
+/* ── Tags ── */
+.tags-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.tag {
+  background:var(--grad-soft); border:1px solid #e9d5ff;
+  border-radius:999px; padding:5px 11px;
+  font-size:12px; font-weight:500;
+  display:flex; align-items:center; gap:5px;
+  cursor:pointer; transition:all .15s; user-select:none;
+}
+.tag:hover { opacity:.75; }
+.tag.excluded {
+  background:#fee2e2; border-color:#fca5a5;
+  text-decoration:line-through; opacity:.55;
+}
+.tag-x { font-size:10px; opacity:.5; }
+
+/* ── Counter ── */
+.counter-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:10px; margin-bottom:14px;
+}
+.counter-cell {
+  text-align:center; padding:12px 8px;
+  border-radius:var(--radius-sm);
+}
+.counter-cell.total { background:var(--grad-soft); }
+.counter-cell.excl  { background:#fee2e2; }
+.counter-cell.elig  { background:#dcfce7; }
+.counter-num {
+  font-size:22px; font-weight:800;
+  background:var(--grad); -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent; background-clip:text;
+}
+.counter-cell.excl .counter-num { background:none; -webkit-text-fill-color:#dc2626; color:#dc2626; }
+.counter-cell.elig .counter-num { background:none; -webkit-text-fill-color:#16a34a; color:#16a34a; }
+.counter-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
+
+/* ── Requisitos pills ── */
+.req-pill {
+  background:#f3e8ff; border:1px solid #ddd6fe; color:#7c3aed;
+  border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.req-x { cursor:pointer; opacity:.6; font-size:11px; }
+.req-x:hover { opacity:1; }
+
+/* ── Buttons ── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:7px; padding:11px 20px; border-radius:var(--radius-sm);
+  border:none; font-family:inherit; font-size:14px;
+  font-weight:700; cursor:pointer; transition:all .2s;
+}
+.btn-grad {
+  background:var(--grad); color:white; width:100%;
+  padding:15px; font-size:15px; border-radius:999px;
+  box-shadow:0 4px 18px rgba(131,58,180,.3);
+}
+.btn-grad:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 24px rgba(131,58,180,.4); }
+.btn-grad:disabled { opacity:.45; cursor:not-allowed; }
+.btn-outline {
+  background:transparent; border:1.5px solid var(--border);
+  color:var(--muted); font-size:13px; padding:9px 14px;
+}
+.btn-outline:hover { border-color:#833ab4; color:#833ab4; }
+.btn-sm { padding:7px 13px; font-size:12px; }
+.btn-danger { background:#fee2e2; color:#dc2626; font-size:12px; padding:8px 14px; }
+.btn-danger:hover { background:#fecaca; }
+
+/* ── Row utils ── */
+.row { display:flex; gap:8px; align-items:center; }
+.row > * { flex:1; }
+.row > .btn { flex:0 0 auto; }
+.mt-10 { margin-top:10px; }
+.mt-14 { margin-top:14px; }
+.empty { text-align:center; padding:28px 16px; color:var(--muted); font-size:13px; }
+.empty-icon { font-size:30px; margin-bottom:8px; }
+
+/* ── Sections ── */
+.section { display:none; }
+.section.active { display:block; }
+
+/* ── History ── */
+.hist-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 0; border-bottom:1px solid var(--border); font-size:13px;
+}
+.hist-item:last-child { border:none; }
+.hist-name { font-weight:700; }
+.hist-time { font-size:11px; color:var(--muted); }
+
+/* ── Roulette overlay ── */
+.overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.82); backdrop-filter:blur(8px);
+  z-index:90; align-items:center; justify-content:center;
+  flex-direction:column; gap:18px; padding:24px;
+}
+.overlay.show { display:flex; }
+
+.roulette-shell {
+  width:min(340px,92vw); background:white;
+  border-radius:20px; overflow:hidden;
+  box-shadow:0 0 60px rgba(131,58,180,.5);
+}
+.roulette-header {
+  background:var(--grad); padding:14px 20px;
+  color:white; text-align:center;
+  font-size:14px; font-weight:700; letter-spacing:.3px;
+}
+.roulette-viewport {
+  height:160px; overflow:hidden; position:relative;
+  background:#fafafa;
+}
+.roulette-viewport::before,
+.roulette-viewport::after {
+  content:''; position:absolute; left:0; right:0; height:50px; z-index:2; pointer-events:none;
+}
+.roulette-viewport::before { top:0; background:linear-gradient(#fafafa,transparent); }
+.roulette-viewport::after  { bottom:0; background:linear-gradient(transparent,#fafafa); }
+.roulette-center {
+  position:absolute; top:50%; left:12px; right:12px;
+  transform:translateY(-50%); height:44px;
+  border-radius:10px;
+  background:var(--grad-soft); border:2px solid #e9d5ff;
+  z-index:1; pointer-events:none;
+}
+.roulette-list {
+  display:flex; flex-direction:column; align-items:stretch;
+  will-change:transform;
+}
+.roulette-item {
+  height:44px; display:flex; align-items:center; justify-content:center;
+  font-size:15px; font-weight:700; color:var(--text);
+  padding:0 20px; text-align:center; flex-shrink:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.spin-label { color:white; font-size:15px; font-weight:600; letter-spacing:.3px; }
+
+/* ── Winner overlay ── */
+.winner-card {
+  background:white; border-radius:24px; padding:36px 28px;
+  text-align:center; max-width:360px; width:100%;
+  animation:popIn .4s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes popIn {
+  from { transform:scale(.6); opacity:0; }
+  to   { transform:scale(1);  opacity:1; }
+}
+.w-crown { font-size:50px; margin-bottom:6px; }
+.w-label { font-size:11px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.w-name  {
+  font-size:28px; font-weight:800;
+  background:var(--grad); -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent; background-clip:text;
+  word-break:break-all; margin-bottom:4px; line-height:1.2;
+}
+.w-sub   { font-size:13px; color:var(--muted); margin-bottom:24px; }
+.w-actions { display:flex; flex-direction:column; gap:10px; }
+
+/* ── Confetti ── */
+#cvs { position:fixed; inset:0; pointer-events:none; z-index:200; }
+
+@media(max-width:480px){
+  .counter-row { grid-template-columns:1fr 1fr; }
+  .step-btn span { display:none; }
+}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+
+<!-- Spinner overlay -->
+<div class="overlay" id="spinOverlay">
+  <div class="spin-label">✨ Sorteando...</div>
+  <div class="roulette-shell">
+    <div class="roulette-header">🎰 Seleccionando ganador</div>
+    <div class="roulette-viewport">
+      <div class="roulette-center"></div>
+      <div class="roulette-list" id="rouletteList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Winner overlay -->
+<div class="overlay" id="winOverlay">
+  <div class="winner-card">
+    <div class="w-crown">🏆</div>
+    <div class="w-label">¡Ganador del sorteo!</div>
+    <div class="w-name" id="wName">@usuario</div>
+    <div class="w-sub"  id="wSub"></div>
+    <div class="w-actions">
+      <button class="btn btn-grad" onclick="sortearOtro()">Sortear otro ganador</button>
+      <button class="btn btn-outline" onclick="closeWin()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-logo">🎰 Sorteo<em>IG</em></div>
+  <div class="header-sub">Sorteá comentarios de Instagram automáticamente</div>
+</div>
+
+<div class="container">
+
+  <!-- Steps nav -->
+  <div class="steps">
+    <button class="step-btn active" id="s1btn" onclick="goStep(1)">
+      <div class="step-num">1</div><span>Publicación</span>
+    </button>
+    <button class="step-btn" id="s2btn" onclick="goStep(2)">
+      <div class="step-num">2</div><span>Requisitos</span>
+    </button>
+    <button class="step-btn" id="s3btn" onclick="goStep(3)">
+      <div class="step-num">3</div><span>Sortear</span>
+    </button>
+  </div>
+
+  <!-- ══ STEP 1 ══ -->
+  <div class="section active" id="step1">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Tu sesión de Instagram</div>
+      </div>
+      <div class="card-desc">Para cargar <strong>todos</strong> los comentarios necesitás tu <code style="background:#f3f4f6;padding:1px 5px;border-radius:4px;font-size:12px">sessionid</code>. Se usa solo en el momento, nunca se guarda.</div>
+
+      <details style="margin-bottom:12px;background:#f9f9f9;border-radius:10px;padding:10px 12px;border:1px solid var(--border)">
+        <summary style="font-size:13px;font-weight:600;cursor:pointer;color:#833ab4;list-style:none">▶ ¿Cómo obtengo el sessionid? (30 segundos)</summary>
+        <ol style="font-size:13px;line-height:2;margin-top:10px;padding-left:18px;color:var(--muted)">
+          <li>Abrí <strong>instagram.com</strong> en Chrome o Edge con tu cuenta</li>
+          <li>Presioná <strong>F12</strong> para abrir DevTools</li>
+          <li>Hacé clic en la pestaña <strong>Application</strong></li>
+          <li>En el panel izquierdo: <strong>Cookies → https://www.instagram.com</strong></li>
+          <li>Buscá la fila llamada <strong>sessionid</strong></li>
+          <li>Copiá el valor de la columna <strong>Value</strong> y pegalo abajo</li>
+        </ol>
+      </details>
+
+      <div style="position:relative">
+        <input type="password" id="sessionId" placeholder="Pegá tu sessionid acá..." autocomplete="off" />
+        <button onclick="toggleSession()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);padding:4px" id="toggleBtn">👁</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">🔒 Nunca se guarda. Solo se envía al servidor en el momento de la consulta.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🔗</div>
+        <div class="card-title">Link de la publicación</div>
+      </div>
+      <div class="card-desc">Pegá el link de la publicación de Instagram y presioná "Cargar". Solo funciona con publicaciones <strong>públicas</strong>.</div>
+      <div class="url-row">
+        <input type="text" id="postUrl" placeholder="https://www.instagram.com/p/ABC123/" />
+        <button class="btn btn-outline" id="loadBtn" onclick="cargarPublicacion()">Cargar</button>
+      </div>
+
+      <!-- Post preview -->
+      <div class="post-preview" id="postPreview">
+        <div class="post-thumb-placeholder" id="postThumbPh">📷</div>
+        <img class="post-thumb" id="postThumb" style="display:none" alt="post" />
+        <div class="post-info">
+          <div class="post-owner" id="postOwner">—</div>
+          <div class="post-caption" id="postCaption">—</div>
+          <div class="post-stats">
+            <span id="postComments">💬 0</span>
+            <span id="postLikes">❤️ 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-bar" id="loadingBar">
+        <p id="loadingMsg">Cargando comentarios...</p>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- Error -->
+      <div class="error-box" id="errorBox">
+        <p id="errorMsg">Error</p>
+        <p class="error-hint">⚠️ Instagram puede limitar las solicitudes temporalmente. Esperá unos segundos y volvé a intentar.</p>
+      </div>
+    </div>
+
+    <!-- Participants -->
+    <div class="card" id="participantsCard">
+      <div class="card-head" style="margin-bottom:10px">
+        <div class="card-icon">👥</div>
+        <div class="card-title">Participantes</div>
+      </div>
+
+      <div class="counter-row" id="counterRow" style="display:none">
+        <div class="counter-cell total">
+          <div class="counter-num" id="cTotal">0</div>
+          <div class="counter-lbl">total</div>
+        </div>
+        <div class="counter-cell excl">
+          <div class="counter-num" id="cExcl">0</div>
+          <div class="counter-lbl">excluidos</div>
+        </div>
+        <div class="counter-cell elig">
+          <div class="counter-num" id="cElig">0</div>
+          <div class="counter-lbl">elegibles</div>
+        </div>
+      </div>
+
+      <div class="tags-wrap" id="tagList">
+        <div class="empty"><div class="empty-icon">👆</div>Cargá una publicación para ver los participantes</div>
+      </div>
+
+      <div class="row mt-10">
+        <input type="text" id="manualInput" placeholder="@usuario (agregar manualmente)" />
+        <button class="btn btn-outline btn-sm" onclick="addManual()">+ Agregar</button>
+      </div>
+    </div>
+
+    <button class="btn btn-grad" onclick="goStep(2)">Continuar → Configurar requisitos</button>
+  </div>
+
+  <!-- ══ STEP 2 ══ -->
+  <div class="section" id="step2">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Configuración del sorteo</div>
+      </div>
+      <div class="card-desc">Definí los requisitos y parámetros del sorteo.</div>
+
+      <label>Nombre del sorteo</label>
+      <input type="text" id="sorteoName" placeholder='Ej: "Sorteo Kit Le Sucrée — Junio 2025"' />
+
+      <div class="mt-14">
+        <label>Cantidad de ganadores</label>
+        <input type="number" id="numWinners" value="1" min="1" max="50" style="width:90px" />
+      </div>
+
+      <div class="mt-14">
+        <label>Requisitos de participación</label>
+        <div class="card-desc" style="margin-bottom:8px">Se muestran como recordatorio al sortear.</div>
+        <div class="row">
+          <input type="text" id="reqInput" placeholder='Ej: "Seguir la cuenta" o "Mencionar 2 amigos"' />
+          <button class="btn btn-outline btn-sm" onclick="addReq()">+ Agregar</button>
+        </div>
+        <div class="tags-wrap mt-10" id="reqPills">
+          <div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🚫</div>
+        <div class="card-title">Excluir participantes</div>
+      </div>
+      <div class="card-desc">Tocá un participante para excluirlo. Tocalo de nuevo para reincluirlo.</div>
+      <div class="tags-wrap" id="excludeList">
+        <div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button class="btn btn-outline" style="flex:1" onclick="goStep(1)">← Volver</button>
+      <button class="btn btn-grad" style="flex:2" onclick="goStep(3)">Continuar → Sortear</button>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3 ══ -->
+  <div class="section" id="step3">
+
+    <div class="card" id="summaryCard"></div>
+
+    <div class="card" id="histCard" style="display:none">
+      <div class="card-head" style="margin-bottom:10px">
+        <div class="card-icon">🏅</div>
+        <div class="card-title">Ganadores</div>
+      </div>
+      <div id="histList"></div>
+    </div>
+
+    <button class="btn btn-grad" id="sortearBtn" onclick="iniciarSorteo()">🎰 ¡Sortear!</button>
+
+    <div class="row mt-10">
+      <button class="btn btn-outline" style="flex:1" onclick="goStep(2)">← Volver</button>
+      <button class="btn btn-danger"  style="flex:1" onclick="resetAll()">🔄 Nuevo sorteo</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── State ──
+let participants = {}; // { @user: { excluded, count } }
+let winners      = [];
+let requisitos   = [];
+let postMeta     = null;
+
+// ── Navigation ──
+function goStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById(`step${i}`).classList.toggle('active', i===n);
+    const btn = document.getElementById(`s${i}btn`);
+    btn.classList.toggle('active', i===n);
+    btn.classList.toggle('done', i<n);
+  });
+  if(n===2) renderExcludeList();
+  if(n===3) renderSummary();
+}
+
+// ── Session toggle ──
+function toggleSession() {
+  const inp = document.getElementById('sessionId');
+  const btn = document.getElementById('toggleBtn');
+  if(inp.type === 'password') { inp.type = 'text';     btn.textContent = '🙈'; }
+  else                        { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+// ── Load post from API ──
+async function cargarPublicacion() {
+  const url       = document.getElementById('postUrl').value.trim();
+  const sessionid = document.getElementById('sessionId').value.trim();
+  if(!sessionid)  return showError('Ingresá tu sessionid de Instagram para poder cargar todos los comentarios.');
+  if(!url)        return showError('Ingresá el link de la publicación.');
+
+  setLoading(true, 'Conectando con Instagram...');
+  hideError();
+  document.getElementById('postPreview').classList.remove('show');
+
+  try {
+    setProgress(20);
+    const apiUrl = `/api/comments?url=${encodeURIComponent(url)}&sessionid=${encodeURIComponent(sessionid)}`;
+    document.getElementById('loadingMsg').textContent = 'Cargando comentarios (puede tardar unos segundos)...';
+    const res  = await fetch(apiUrl);
+    setProgress(70);
+    const data = await res.json();
+    setProgress(95);
+
+    if(!data.ok) throw new Error(data.error || 'Error desconocido');
+
+    // Store post meta
+    postMeta = data.postMeta;
+    showPostPreview(postMeta);
+
+    // Build participants
+    participants = {};
+    data.comments.forEach(c => {
+      const u = '@' + c.username.toLowerCase();
+      participants[u] = participants[u]
+        ? { ...participants[u], count: participants[u].count + 1 }
+        : { excluded: false, count: 1 };
+    });
+
+    setProgress(100);
+    setTimeout(() => setLoading(false), 400);
+    renderTags();
+
+  } catch(err) {
+    setLoading(false);
+    showError(err.message);
+  }
+}
+
+function setLoading(on, msg='') {
+  const bar = document.getElementById('loadingBar');
+  const btn = document.getElementById('loadBtn');
+  bar.classList.toggle('show', on);
+  btn.disabled = on;
+  btn.textContent = on ? '...' : 'Cargar';
+  if(msg) document.getElementById('loadingMsg').textContent = msg;
+  if(!on) setProgress(0);
+}
+
+function setProgress(p) {
+  document.getElementById('progressFill').style.width = p + '%';
+}
+
+function showError(msg) {
+  const box = document.getElementById('errorBox');
+  document.getElementById('errorMsg').textContent = msg;
+  box.classList.add('show');
+}
+
+function hideError() {
+  document.getElementById('errorBox').classList.remove('show');
+}
+
+function showPostPreview(meta) {
+  document.getElementById('postPreview').classList.add('show');
+  document.getElementById('postOwner').textContent   = '@' + meta.owner;
+  document.getElementById('postCaption').textContent = meta.caption || '(sin texto)';
+  document.getElementById('postComments').textContent = `💬 ${meta.commentCount.toLocaleString()}`;
+  document.getElementById('postLikes').textContent    = `❤️ ${meta.likeCount.toLocaleString()}`;
+  const img = document.getElementById('postThumb');
+  const ph  = document.getElementById('postThumbPh');
+  if(meta.imageUrl) {
+    img.src     = meta.imageUrl;
+    img.style.display = 'block';
+    ph.style.display  = 'none';
+  }
+}
+
+// ── Tags ──
+function renderTags() {
+  const wrap = document.getElementById('tagList');
+  const keys = Object.keys(participants);
+  const excl = keys.filter(k=>participants[k].excluded).length;
+  const elig = keys.filter(k=>!participants[k].excluded).length;
+
+  document.getElementById('counterRow').style.display = keys.length ? 'grid' : 'none';
+  document.getElementById('cTotal').textContent = keys.length;
+  document.getElementById('cExcl').textContent  = excl;
+  document.getElementById('cElig').textContent  = elig;
+
+  if(!keys.length) {
+    wrap.innerHTML = '<div class="empty"><div class="empty-icon">👆</div>Cargá una publicación para ver los participantes</div>';
+    return;
+  }
+  wrap.innerHTML = '';
+  keys.sort().forEach(u => {
+    const p   = participants[u];
+    const tag = document.createElement('div');
+    tag.className = 'tag' + (p.excluded ? ' excluded' : '');
+    tag.innerHTML = `${u}${p.count>1?` ×${p.count}`:''}<span class="tag-x">✕</span>`;
+    tag.onclick   = () => { delete participants[u]; renderTags(); };
+    wrap.appendChild(tag);
+  });
+}
+
+function addManual() {
+  let v = document.getElementById('manualInput').value.trim();
+  if(!v) return;
+  if(!v.startsWith('@')) v = '@'+v;
+  v = v.toLowerCase();
+  participants[v] = participants[v] || { excluded:false, count:1 };
+  document.getElementById('manualInput').value = '';
+  renderTags();
+}
+
+// ── Requisitos ──
+function addReq() {
+  const v = document.getElementById('reqInput').value.trim();
+  if(!v) return;
+  requisitos.push(v);
+  document.getElementById('reqInput').value = '';
+  renderReqs();
+}
+function removeReq(i) { requisitos.splice(i,1); renderReqs(); }
+function renderReqs() {
+  const c = document.getElementById('reqPills');
+  if(!requisitos.length) {
+    c.innerHTML = '<div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>';
+    return;
+  }
+  c.innerHTML = '';
+  requisitos.forEach((r,i) => {
+    const d = document.createElement('div');
+    d.className = 'req-pill';
+    d.innerHTML = `${r} <span class="req-x" onclick="removeReq(${i})">✕</span>`;
+    c.appendChild(d);
+  });
+}
+
+// ── Exclude list ──
+function renderExcludeList() {
+  const c    = document.getElementById('excludeList');
+  const keys = Object.keys(participants);
+  if(!keys.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>';
+    return;
+  }
+  c.innerHTML = '';
+  keys.sort().forEach(u => {
+    const p   = participants[u];
+    const tag = document.createElement('div');
+    tag.className = 'tag' + (p.excluded ? ' excluded' : '');
+    tag.title     = p.excluded ? 'Clic para reincluir' : 'Clic para excluir';
+    tag.innerHTML = `${p.excluded?'🚫 ':''}${u}<span class="tag-x">${p.excluded?'↩':'✕'}</span>`;
+    tag.onclick   = () => { participants[u].excluded = !p.excluded; renderExcludeList(); renderTags(); };
+    c.appendChild(tag);
+  });
+}
+
+// ── Summary ──
+function renderSummary() {
+  const active  = Object.keys(participants).filter(k=>!participants[k].excluded);
+  const excl    = Object.keys(participants).filter(k=>participants[k].excluded);
+  const already = winners.map(w=>w.name);
+  const elig    = active.filter(u=>!already.includes(u));
+  const nw      = parseInt(document.getElementById('numWinners').value)||1;
+  const name    = document.getElementById('sorteoName').value || 'Sorteo sin nombre';
+
+  const reqHtml = requisitos.length
+    ? requisitos.map(r=>`<div style="font-size:13px;padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px;align-items:center">✅ <span>${r}</span></div>`).join('')
+    : '<div style="font-size:13px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>';
+
+  document.getElementById('summaryCard').innerHTML = `
+    <div class="card-head" style="margin-bottom:10px">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Resumen del sorteo</div>
+    </div>
+    <div style="font-size:16px;font-weight:800;margin-bottom:2px">${name}</div>
+    ${postMeta?`<div style="font-size:12px;color:var(--muted);margin-bottom:14px">@${postMeta.owner} · ${postMeta.commentCount.toLocaleString()} comentarios</div>`:''}
+    <div class="counter-row" style="margin-bottom:16px">
+      <div class="counter-cell total"><div class="counter-num">${active.length}</div><div class="counter-lbl">participantes</div></div>
+      <div class="counter-cell excl" ><div class="counter-num">${excl.length}</div><div class="counter-lbl">excluidos</div></div>
+      <div class="counter-cell elig" ><div class="counter-num">${elig.length}</div><div class="counter-lbl">elegibles</div></div>
+    </div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px">Requisitos</div>
+    ${reqHtml}
+    <div style="margin-top:14px;font-size:13px;font-weight:700">Ganadores a sortear: <span style="color:#833ab4">${nw}</span></div>
+  `;
+
+  const btn = document.getElementById('sortearBtn');
+  btn.disabled  = elig.length === 0;
+  btn.innerHTML = elig.length
+    ? `🎰 ¡Sortear! — ${elig.length} elegibles`
+    : 'Sin participantes elegibles';
+
+  renderHistorial();
+}
+
+// ── Sorteo ──
+function iniciarSorteo() {
+  const active  = Object.keys(participants).filter(k=>!participants[k].excluded);
+  const already = winners.map(w=>w.name);
+  const elig    = active.filter(u=>!already.includes(u));
+  if(!elig.length) return;
+
+  const winner = elig[Math.floor(Math.random() * elig.length)];
+  animateRoulette(elig, winner);
+}
+
+function animateRoulette(pool, winner) {
+  const overlay = document.getElementById('spinOverlay');
+  const list    = document.getElementById('rouletteList');
+  overlay.classList.add('show');
+
+  const items = [];
+  for(let i=0; i<30; i++) items.push(pool[Math.floor(Math.random()*pool.length)]);
+  items.push(winner); // winner always at index 30
+
+  list.innerHTML = items.map(u=>`<div class="roulette-item">${u}</div>`).join('');
+  list.style.transition = 'none';
+  list.style.transform  = 'translateY(58px)'; // start above center
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Stop with winner centered: offset = -(30 * 44) + (viewport_height/2 - 22)
+      // viewport 160px, center = 80px, item half = 22px → offset adds 58
+      const offset = -(30 * 44) + 58;
+      list.style.transition = 'transform 3s cubic-bezier(.08,.92,.15,1)';
+      list.style.transform  = `translateY(${offset}px)`;
+    });
+  });
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    showWinner(winner);
+  }, 3400);
+}
+
+function showWinner(winner) {
+  const nw = parseInt(document.getElementById('numWinners').value)||1;
+  winners.push({ name:winner, time:new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}) });
+  document.getElementById('wName').textContent = winner;
+  document.getElementById('wSub').textContent  = `Ganador ${winners.length} de ${nw}`;
+  document.getElementById('winOverlay').classList.add('show');
+  launchConfetti();
+  renderHistorial();
+  renderSummary();
+}
+
+function closeWin() { document.getElementById('winOverlay').classList.remove('show'); }
+
+function sortearOtro() {
+  closeWin();
+  const nw = parseInt(document.getElementById('numWinners').value)||1;
+  if(winners.length >= nw) {
+    alert(`Ya se sortearon los ${nw} ganadores. Podés cambiar la cantidad en el paso 2.`);
+    return;
+  }
+  setTimeout(iniciarSorteo, 350);
+}
+
+// ── Historial ──
+function renderHistorial() {
+  const card = document.getElementById('histCard');
+  const list = document.getElementById('histList');
+  if(!winners.length) { card.style.display='none'; return; }
+  card.style.display='block';
+  list.innerHTML = winners.map((w,i)=>`
+    <div class="hist-item">
+      <span style="font-weight:600">${i+1}. <span class="hist-name">${w.name}</span></span>
+      <span class="hist-time">${w.time}</span>
+    </div>
+  `).join('');
+}
+
+// ── Reset ──
+function resetAll() {
+  if(!confirm('¿Resetear todo el sorteo?')) return;
+  participants = {}; winners = []; requisitos = []; postMeta = null;
+  document.getElementById('postUrl').value = '';
+  document.getElementById('sorteoName').value = '';
+  document.getElementById('numWinners').value = '1';
+  document.getElementById('postPreview').classList.remove('show');
+  hideError();
+  renderTags(); renderReqs(); renderHistorial();
+  goStep(1);
+}
+
+// ── Confetti ──
+function launchConfetti() {
+  const cvs = document.getElementById('cvs');
+  const ctx = cvs.getContext('2d');
+  cvs.width  = innerWidth;
+  cvs.height = innerHeight;
+  const clrs = ['#833ab4','#fd1d1d','#fcb045','#f9ca24','#6ab04c','#38bdf8','#f472b6'];
+  const ps   = Array.from({length:160}, () => ({
+    x:Math.random()*cvs.width, y:-20,
+    r:Math.random()*6+3,
+    d:Math.random()*4+2,
+    c:clrs[Math.floor(Math.random()*clrs.length)],
+    ta:0, ts:Math.random()*.1+.04,
+    sq:Math.random()<.5,
+  }));
+  let f=0;
+  (function draw() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    ps.forEach(p => {
+      ctx.fillStyle=p.c; p.ta+=p.ts; p.y+=p.d;
+      p.x+=Math.sin(p.ta)*.9;
+      ctx.beginPath();
+      if(p.sq){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.ta); ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore(); }
+      else { ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); }
+    });
+    if(++f<200) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,cvs.width,cvs.height);
+  })();
+}
+
+// Keyboard shortcuts
+document.getElementById('reqInput').addEventListener('keydown',   e=>{ if(e.key==='Enter') addReq(); });
+document.getElementById('manualInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addManual(); });
+document.getElementById('postUrl').addEventListener('keydown',     e=>{ if(e.key==='Enter') cargarPublicacion(); });
+</script>
+</body>
+</html>
