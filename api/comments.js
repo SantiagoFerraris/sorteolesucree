@@ -11,7 +11,7 @@ const HEADERS = (sessionid) => ({
 });
 
 function urlToShortcode(url) {
-  const match = url.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  const match = url.match(/instagram\.com\/(?:[^/]+\/)?(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
   return match ? match[1] : null;
 }
 
