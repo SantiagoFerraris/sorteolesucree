@@ -9,153 +9,92 @@
 :root {
   --grad: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
   --grad-soft: linear-gradient(135deg, #f5f0ff 0%, #fff0f0 50%, #fffaf0 100%);
-  --surface: #fff;
-  --bg: #fafafa;
-  --border: #e5e7eb;
-  --text: #111;
-  --muted: #6b7280;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --shadow: 0 2px 12px rgba(0,0,0,.07);
+  --bg: #fafafa; --border: #e5e7eb; --text: #111; --muted: #6b7280;
+  --radius: 16px; --radius-sm: 10px; --shadow: 0 2px 12px rgba(0,0,0,.07);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-
-.header {
-  background:var(--grad); padding:28px 20px 24px;
-  text-align:center; color:white; position:relative; overflow:hidden;
-}
-.header::before {
-  content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse at 30% 60%,rgba(255,255,255,.18) 0%,transparent 60%);
-}
+.header { background:var(--grad); padding:28px 20px 24px; text-align:center; color:white; position:relative; overflow:hidden; }
+.header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 60%,rgba(255,255,255,.18) 0%,transparent 60%); }
 .header-logo { font-size:26px; font-weight:800; letter-spacing:-1px; position:relative; }
 .header-logo em { font-style:normal; opacity:.7; font-weight:400; }
 .header-sub { font-size:13px; opacity:.85; margin-top:4px; position:relative; }
-
-.container { max-width:660px; margin:0 auto; padding:24px 16px 80px; }
-
-.steps {
-  display:flex; background:white; border-radius:999px;
-  padding:5px; border:1px solid var(--border);
-  margin-bottom:24px; box-shadow:var(--shadow);
-}
-.step-btn {
-  flex:1; padding:9px 4px; border-radius:999px; border:none;
-  background:transparent; font-family:inherit; font-size:12px;
-  font-weight:600; cursor:pointer; color:var(--muted);
-  transition:all .25s; display:flex; align-items:center; justify-content:center; gap:5px;
-}
+.container { max-width:680px; margin:0 auto; padding:24px 16px 80px; }
+.steps { display:flex; background:white; border-radius:999px; padding:5px; border:1px solid var(--border); margin-bottom:24px; box-shadow:var(--shadow); }
+.step-btn { flex:1; padding:9px 4px; border-radius:999px; border:none; background:transparent; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; color:var(--muted); transition:all .25s; display:flex; align-items:center; justify-content:center; gap:5px; }
 .step-btn.active { background:var(--grad); color:white; }
 .step-btn.done { color:#16a34a; }
-.step-num {
-  width:18px; height:18px; border-radius:50%; background:var(--border); color:var(--muted);
-  display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0;
-}
+.step-num { width:18px; height:18px; border-radius:50%; background:var(--border); color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
 .step-btn.active .step-num { background:rgba(255,255,255,.3); color:white; }
-.step-btn.done   .step-num { background:#dcfce7; color:#16a34a; }
-
-.card {
-  background:white; border-radius:var(--radius); border:1px solid var(--border);
-  padding:20px; margin-bottom:14px; box-shadow:var(--shadow);
-}
+.step-btn.done .step-num { background:#dcfce7; color:#16a34a; }
+.card { background:white; border-radius:var(--radius); border:1px solid var(--border); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
 .card-head { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
-.card-icon {
-  width:30px; height:30px; border-radius:9px; background:var(--grad-soft);
-  display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;
-}
+.card-icon { width:30px; height:30px; border-radius:9px; background:var(--grad-soft); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
 .card-title { font-size:15px; font-weight:700; }
 .card-desc { font-size:13px; color:var(--muted); margin:6px 0 14px; line-height:1.6; }
-
-/* Bookmarklet box */
-.bm-box {
-  background: linear-gradient(135deg,#1a1a2e,#16213e);
-  border-radius:var(--radius-sm); padding:18px; margin-bottom:14px;
-  border:1px solid #2d2d5e;
-}
+.bm-box { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:var(--radius-sm); padding:18px; margin-bottom:14px; border:1px solid #2d2d5e; }
 .bm-label { font-size:12px; font-weight:700; color:#a78bfa; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
 .bm-button-wrap { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-.bm-drag-btn {
-  background:var(--grad); color:white; border:none; border-radius:999px;
-  padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700;
-  cursor:grab; white-space:nowrap; box-shadow:0 4px 16px rgba(131,58,180,.4);
-  text-decoration:none; display:inline-block;
-}
-.bm-drag-btn:active { cursor:grabbing; }
+.bm-drag-btn { background:var(--grad); color:white; border:none; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:grab; white-space:nowrap; box-shadow:0 4px 16px rgba(131,58,180,.4); text-decoration:none; display:inline-block; }
 .bm-hint { font-size:12px; color:#94a3b8; line-height:1.5; }
-
-.steps-list {
-  counter-reset:step; list-style:none; padding:0;
-}
-.steps-list li {
-  counter-increment:step; display:flex; gap:10px; align-items:flex-start;
-  padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; line-height:1.5;
-}
+.steps-list { counter-reset:step; list-style:none; padding:0; }
+.steps-list li { counter-increment:step; display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; line-height:1.5; }
 .steps-list li:last-child { border:none; }
-.steps-list li::before {
-  content:counter(step); width:20px; height:20px; border-radius:50%;
-  background:var(--grad); color:white; font-size:11px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
-}
-
+.steps-list li::before { content:counter(step); width:20px; height:20px; border-radius:50%; background:var(--grad); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
 label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; }
-input[type=text], input[type=number], textarea {
-  width:100%; padding:11px 14px; border:1.5px solid var(--border);
-  border-radius:var(--radius-sm); font-family:inherit; font-size:14px;
-  background:#f9f9f9; color:var(--text); transition:border-color .2s; outline:none;
-}
-input:focus, textarea:focus { border-color:#833ab4; background:white; }
+input[type=text], input[type=number], textarea, select { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:14px; background:#f9f9f9; color:var(--text); transition:border-color .2s; outline:none; }
+input:focus, textarea:focus, select:focus { border-color:#833ab4; background:white; }
+
+/* Filter cards */
+.filter-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; transition:border-color .2s; }
+.filter-card.active-filter { border-color:#833ab4; background:#faf5ff; }
+.filter-header { display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.filter-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
+.filter-badge { font-size:10px; background:var(--grad-soft); border:1px solid #e9d5ff; color:#7c3aed; padding:2px 8px; border-radius:999px; font-weight:600; }
+.filter-badge.on { background:var(--grad); color:white; border:none; }
+.filter-body { margin-top:12px; display:none; }
+.filter-body.open { display:block; }
+.filter-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.filter-row label { margin:0; white-space:nowrap; }
+.filter-row input[type=number] { width:70px; }
+.filter-row input[type=text] { flex:1; }
+
+/* Toggle switch */
+.toggle-wrap { display:flex; align-items:center; gap:8px; }
+.toggle { position:relative; width:38px; height:22px; flex-shrink:0; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; background:#d1d5db; border-radius:999px; cursor:pointer; transition:.2s; }
+.toggle-slider::before { content:''; position:absolute; width:16px; height:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.2s; }
+.toggle input:checked + .toggle-slider { background:#833ab4; }
+.toggle input:checked + .toggle-slider::before { transform:translateX(16px); }
 
 .counter-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
 .counter-cell { text-align:center; padding:12px 8px; border-radius:var(--radius-sm); }
 .counter-cell.total { background:var(--grad-soft); }
 .counter-cell.excl  { background:#fee2e2; }
 .counter-cell.elig  { background:#dcfce7; }
-.counter-num {
-  font-size:22px; font-weight:800;
-  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-}
+.counter-num { font-size:22px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .counter-cell.excl .counter-num { background:none; -webkit-text-fill-color:#dc2626; }
 .counter-cell.elig .counter-num { background:none; -webkit-text-fill-color:#16a34a; }
 .counter-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
 
 .tags-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
-.tag {
-  background:var(--grad-soft); border:1px solid #e9d5ff; border-radius:999px;
-  padding:5px 11px; font-size:12px; font-weight:500;
-  display:flex; align-items:center; gap:5px; cursor:pointer; transition:all .15s;
-}
+.tag { background:var(--grad-soft); border:1px solid #e9d5ff; border-radius:999px; padding:5px 11px; font-size:12px; font-weight:500; display:flex; align-items:center; gap:5px; cursor:pointer; transition:all .15s; }
 .tag:hover { opacity:.75; }
 .tag.excluded { background:#fee2e2; border-color:#fca5a5; text-decoration:line-through; opacity:.55; }
+.tag.auto-excluded { background:#fef9c3; border-color:#fde047; opacity:.7; }
 .tag-x { font-size:10px; opacity:.5; }
-
-.req-pill {
-  background:#f3e8ff; border:1px solid #ddd6fe; color:#7c3aed;
-  border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600;
-  display:inline-flex; align-items:center; gap:5px;
-}
+.req-pill { background:#f3e8ff; border:1px solid #ddd6fe; color:#7c3aed; border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:5px; }
 .req-x { cursor:pointer; opacity:.6; font-size:11px; }
-.req-x:hover { opacity:1; }
 
-.btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:7px; padding:11px 20px; border-radius:var(--radius-sm); border:none;
-  font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s;
-}
-.btn-grad {
-  background:var(--grad); color:white; width:100%; padding:15px; font-size:15px;
-  border-radius:999px; box-shadow:0 4px 18px rgba(131,58,180,.3);
-}
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px 20px; border-radius:var(--radius-sm); border:none; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-grad { background:var(--grad); color:white; width:100%; padding:15px; font-size:15px; border-radius:999px; box-shadow:0 4px 18px rgba(131,58,180,.3); }
 .btn-grad:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 24px rgba(131,58,180,.4); }
 .btn-grad:disabled { opacity:.45; cursor:not-allowed; }
-.btn-outline {
-  background:transparent; border:1.5px solid var(--border);
-  color:var(--muted); font-size:13px; padding:9px 14px;
-}
+.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--muted); font-size:13px; padding:9px 14px; }
 .btn-outline:hover { border-color:#833ab4; color:#833ab4; }
 .btn-sm { padding:7px 13px; font-size:12px; }
 .btn-danger { background:#fee2e2; color:#dc2626; font-size:12px; padding:8px 14px; }
-.btn-danger:hover { background:#fecaca; }
 
 .row { display:flex; gap:8px; align-items:center; }
 .row > * { flex:1; }
@@ -164,88 +103,44 @@ input:focus, textarea:focus { border-color:#833ab4; background:white; }
 .mt-14 { margin-top:14px; }
 .empty { text-align:center; padding:28px 16px; color:var(--muted); font-size:13px; }
 .empty-icon { font-size:30px; margin-bottom:8px; }
-
 .section { display:none; }
 .section.active { display:block; }
+.loaded-banner { display:none; background:#dcfce7; border:1px solid #86efac; border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:12px; font-size:13px; color:#166534; font-weight:600; align-items:center; gap:8px; }
+.loaded-banner.show { display:flex; }
 
-.hist-item {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:11px 0; border-bottom:1px solid var(--border); font-size:13px;
-}
+/* filter summary pill */
+.filter-summary { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.fsummary-pill { background:#f0fdf4; border:1px solid #86efac; color:#15803d; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:4px; }
+
+.hist-item { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border); font-size:13px; }
 .hist-item:last-child { border:none; }
 .hist-name { font-weight:700; }
 .hist-time { font-size:11px; color:var(--muted); }
 
-/* loaded banner */
-.loaded-banner {
-  display:none; background:#dcfce7; border:1px solid #86efac;
-  border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:12px;
-  font-size:13px; color:#166534; font-weight:600; align-items:center; gap:8px;
-}
-.loaded-banner.show { display:flex; }
-
-/* Overlays */
-.overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,.82); backdrop-filter:blur(8px);
-  z-index:90; align-items:center; justify-content:center;
-  flex-direction:column; gap:18px; padding:24px;
-}
+.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(8px); z-index:90; align-items:center; justify-content:center; flex-direction:column; gap:18px; padding:24px; }
 .overlay.show { display:flex; }
-
-.roulette-shell {
-  width:min(340px,92vw); background:white; border-radius:20px; overflow:hidden;
-  box-shadow:0 0 60px rgba(131,58,180,.5);
-}
-.roulette-header {
-  background:var(--grad); padding:14px 20px; color:white;
-  text-align:center; font-size:14px; font-weight:700;
-}
-.roulette-viewport {
-  height:160px; overflow:hidden; position:relative; background:#fafafa;
-}
-.roulette-viewport::before,
-.roulette-viewport::after {
-  content:''; position:absolute; left:0; right:0; height:50px; z-index:2; pointer-events:none;
-}
-.roulette-viewport::before { top:0;    background:linear-gradient(#fafafa,transparent); }
+.roulette-shell { width:min(340px,92vw); background:white; border-radius:20px; overflow:hidden; box-shadow:0 0 60px rgba(131,58,180,.5); }
+.roulette-header { background:var(--grad); padding:14px 20px; color:white; text-align:center; font-size:14px; font-weight:700; }
+.roulette-viewport { height:160px; overflow:hidden; position:relative; background:#fafafa; }
+.roulette-viewport::before, .roulette-viewport::after { content:''; position:absolute; left:0; right:0; height:50px; z-index:2; pointer-events:none; }
+.roulette-viewport::before { top:0; background:linear-gradient(#fafafa,transparent); }
 .roulette-viewport::after  { bottom:0; background:linear-gradient(transparent,#fafafa); }
-.roulette-center {
-  position:absolute; top:50%; left:12px; right:12px; transform:translateY(-50%);
-  height:44px; border-radius:10px; background:var(--grad-soft);
-  border:2px solid #e9d5ff; z-index:1; pointer-events:none;
-}
-.roulette-list {
-  display:flex; flex-direction:column; align-items:stretch; will-change:transform;
-}
-.roulette-item {
-  height:44px; display:flex; align-items:center; justify-content:center;
-  font-size:15px; font-weight:700; padding:0 20px; text-align:center;
-  flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
+.roulette-center { position:absolute; top:50%; left:12px; right:12px; transform:translateY(-50%); height:44px; border-radius:10px; background:var(--grad-soft); border:2px solid #e9d5ff; z-index:1; pointer-events:none; }
+.roulette-list { display:flex; flex-direction:column; align-items:stretch; will-change:transform; }
+.roulette-item { height:44px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; padding:0 20px; text-align:center; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .spin-label { color:white; font-size:15px; font-weight:600; }
-
-.winner-card {
-  background:white; border-radius:24px; padding:36px 28px; text-align:center;
-  max-width:360px; width:100%; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275);
-}
+.winner-card { background:white; border-radius:24px; padding:36px 28px; text-align:center; max-width:360px; width:100%; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); }
 @keyframes popIn { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
 .w-crown { font-size:50px; margin-bottom:6px; }
 .w-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-.w-name {
-  font-size:28px; font-weight:800;
-  background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  word-break:break-all; margin-bottom:4px; line-height:1.2;
-}
+.w-name { font-size:28px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; word-break:break-all; margin-bottom:4px; line-height:1.2; }
 .w-sub { font-size:13px; color:var(--muted); margin-bottom:24px; }
 .w-actions { display:flex; flex-direction:column; gap:10px; }
-
 #cvs { position:fixed; inset:0; pointer-events:none; z-index:200; }
 
 @media(max-width:480px){
   .counter-row { grid-template-columns:1fr 1fr; }
   .step-btn span { display:none; }
-  .bm-button-wrap { flex-direction:column; align-items:flex-start; }
 }
 </style>
 </head>
@@ -284,17 +179,15 @@ input:focus, textarea:focus { border-color:#833ab4; background:white; }
 <div class="container">
   <div class="steps">
     <button class="step-btn active" id="s1btn" onclick="goStep(1)"><div class="step-num">1</div><span>Importar</span></button>
-    <button class="step-btn" id="s2btn" onclick="goStep(2)"><div class="step-num">2</div><span>Requisitos</span></button>
+    <button class="step-btn" id="s2btn" onclick="goStep(2)"><div class="step-num">2</div><span>Filtros</span></button>
     <button class="step-btn" id="s3btn" onclick="goStep(3)"><div class="step-num">3</div><span>Sortear</span></button>
   </div>
 
   <!-- ══ STEP 1 ══ -->
   <div class="section active" id="step1">
-
     <div class="card">
       <div class="card-head"><div class="card-icon">🔖</div><div class="card-title">Bookmarklet de extracción</div></div>
-      <div class="card-desc">Arrastrá el botón de abajo a tu barra de favoritos. Luego, estando en la publicación de Instagram, hacé clic en él para extraer todos los comentarios automáticamente.</div>
-
+      <div class="card-desc">Arrastrá el botón a tu barra de favoritos. Luego, en la publicación de Instagram, hacé clic en él para extraer todos los comentarios automáticamente.</div>
       <div class="bm-box">
         <div class="bm-label">① Arrastrá este botón a tus favoritos</div>
         <div class="bm-button-wrap">
@@ -302,75 +195,163 @@ input:focus, textarea:focus { border-color:#833ab4; background:white; }
           <div class="bm-hint">Arrastrá hacia la barra de favoritos<br>del navegador (o guardalo como favorito)</div>
         </div>
       </div>
-
       <div class="card-desc" style="margin-bottom:8px;font-weight:600;color:var(--text)">② Cómo usarlo:</div>
       <ol class="steps-list">
-        <li>Abrí la publicación de Instagram en el navegador (tiene que estar visible en pantalla)</li>
-        <li>Scrolleá hacia abajo para que carguen más comentarios si querés (el bookmarklet extrae los que están visibles + pagina automáticamente)</li>
+        <li>Abrí la publicación de Instagram en el navegador</li>
         <li>Hacé clic en el bookmarklet "Extraer comentarios IG" de tus favoritos</li>
-        <li>Esperá unos segundos mientras extrae y pagina todos los comentarios</li>
-        <li>Te va a redirigir acá automáticamente con todos los participantes cargados</li>
+        <li>Esperá mientras extrae y pagina todos los comentarios (se muestra el progreso)</li>
+        <li>Te redirige acá automáticamente con todos los participantes y sus comentarios cargados</li>
       </ol>
     </div>
 
-    <div class="card" id="participantsCard">
-      <div class="card-head" style="margin-bottom:10px">
-        <div class="card-icon">👥</div>
-        <div class="card-title">Participantes</div>
-      </div>
-
-      <div class="loaded-banner" id="loadedBanner">
-        ✅ <span id="loadedMsg">Comentarios cargados correctamente</span>
-      </div>
-
+    <div class="card">
+      <div class="card-head" style="margin-bottom:10px"><div class="card-icon">👥</div><div class="card-title">Participantes</div></div>
+      <div class="loaded-banner" id="loadedBanner">✅ <span id="loadedMsg">Comentarios cargados</span></div>
       <div class="counter-row" id="counterRow" style="display:none">
-        <div class="counter-cell total"><div class="counter-num" id="cTotal">0</div><div class="counter-lbl">total</div></div>
-        <div class="counter-cell excl" ><div class="counter-num" id="cExcl">0</div><div class="counter-lbl">excluidos</div></div>
-        <div class="counter-cell elig" ><div class="counter-num" id="cElig">0</div><div class="counter-lbl">elegibles</div></div>
+        <div class="counter-cell total"><div class="counter-num" id="cTotal">0</div><div class="counter-lbl">importados</div></div>
+        <div class="counter-cell excl"><div class="counter-num" id="cExcl">0</div><div class="counter-lbl">filtrados</div></div>
+        <div class="counter-cell elig"><div class="counter-num" id="cElig">0</div><div class="counter-lbl">elegibles</div></div>
       </div>
-
       <div class="tags-wrap" id="tagList">
         <div class="empty"><div class="empty-icon">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div>
       </div>
-
       <div class="row mt-10">
         <input type="text" id="manualInput" placeholder="@usuario (agregar manualmente)" />
         <button class="btn btn-outline btn-sm" onclick="addManual()">+ Agregar</button>
       </div>
     </div>
-
-    <button class="btn btn-grad" onclick="goStep(2)">Continuar → Configurar requisitos</button>
+    <button class="btn btn-grad" onclick="goStep(2)">Continuar → Configurar filtros</button>
   </div>
 
   <!-- ══ STEP 2 ══ -->
   <div class="section" id="step2">
-    <div class="card">
-      <div class="card-head"><div class="card-icon">📋</div><div class="card-title">Configuración del sorteo</div></div>
 
+    <div class="card">
+      <div class="card-head"><div class="card-icon">📋</div><div class="card-title">Configuración general</div></div>
       <label>Nombre del sorteo</label>
       <input type="text" id="sorteoName" placeholder='Ej: "Sorteo Kit Le Sucrée — Junio 2025"' />
-
       <div class="mt-14">
         <label>Cantidad de ganadores</label>
         <input type="number" id="numWinners" value="1" min="1" max="50" style="width:90px" />
       </div>
+    </div>
 
-      <div class="mt-14">
-        <label>Requisitos de participación</label>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Solo como recordatorio visual.</div>
-        <div class="row">
-          <input type="text" id="reqInput" placeholder='Ej: "Seguir la cuenta" o "Mencionar 2 amigos"' />
-          <button class="btn btn-outline btn-sm" onclick="addReq()">+ Agregar</button>
+    <div class="card">
+      <div class="card-head" style="margin-bottom:14px"><div class="card-icon">⚙️</div><div class="card-title">Filtros automáticos</div></div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Activá los filtros que quieras. Se aplican automáticamente al sortear — los que no cumplen quedan excluidos.</div>
+
+      <!-- Filter 1: Min mentions -->
+      <div class="filter-card" id="fc-mentions">
+        <div class="filter-header" onclick="toggleFilter('mentions')">
+          <div class="filter-title">👥 Mínimo de menciones en el comentario
+            <span class="filter-badge" id="fb-mentions">OFF</span>
+          </div>
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="ft-mentions" onchange="onFilterToggle('mentions')">
+            <span class="toggle-slider"></span>
+          </label>
         </div>
-        <div class="tags-wrap mt-10" id="reqPills">
-          <div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>
+        <div class="filter-body" id="fb-body-mentions">
+          <div class="filter-row" style="margin-top:4px">
+            <label>Mínimo de @menciones requeridas:</label>
+            <input type="number" id="fv-mentions" value="1" min="1" max="10" onchange="applyFilters()" />
+          </div>
+          <div style="font-size:12px;color:var(--muted)">Excluye a quienes comentaron sin mencionar suficientes usuarios.</div>
         </div>
+      </div>
+
+      <!-- Filter 2: Must contain keyword -->
+      <div class="filter-card" id="fc-keyword">
+        <div class="filter-header" onclick="toggleFilter('keyword')">
+          <div class="filter-title">🔤 El comentario debe contener una frase
+            <span class="filter-badge" id="fb-keyword">OFF</span>
+          </div>
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="ft-keyword" onchange="onFilterToggle('keyword')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="filter-body" id="fb-body-keyword">
+          <div class="filter-row" style="margin-top:4px">
+            <input type="text" id="fv-keyword" placeholder='Ej: "Vamos Argentina" o "Le Sucrée"' oninput="applyFilters()" />
+          </div>
+          <div style="font-size:12px;color:var(--muted)">No distingue mayúsculas/minúsculas. Excluye a quienes no incluyeron esa palabra o frase.</div>
+        </div>
+      </div>
+
+      <!-- Filter 3: Min words -->
+      <div class="filter-card" id="fc-words">
+        <div class="filter-header" onclick="toggleFilter('words')">
+          <div class="filter-title">📝 Comentario mínimo de X palabras
+            <span class="filter-badge" id="fb-words">OFF</span>
+          </div>
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="ft-words" onchange="onFilterToggle('words')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="filter-body" id="fb-body-words">
+          <div class="filter-row" style="margin-top:4px">
+            <label>Palabras mínimas:</label>
+            <input type="number" id="fv-words" value="2" min="1" max="50" onchange="applyFilters()" />
+          </div>
+          <div style="font-size:12px;color:var(--muted)">Filtra comentarios que son solo emojis o una palabra suelta.</div>
+        </div>
+      </div>
+
+      <!-- Filter 4: No bots -->
+      <div class="filter-card" id="fc-bots">
+        <div class="filter-header" onclick="toggleFilter('bots')">
+          <div class="filter-title">🤖 Filtrar posibles bots/cuentas falsas
+            <span class="filter-badge" id="fb-bots">OFF</span>
+          </div>
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="ft-bots" onchange="onFilterToggle('bots')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="filter-body" id="fb-body-bots">
+          <div style="margin-top:4px;font-size:12px;color:var(--muted);line-height:1.6">Excluye usernames que parecen generados automáticamente: más de 5 números consecutivos, patrones como "user123456789", o menos de 3 caracteres totales.</div>
+        </div>
+      </div>
+
+      <!-- Filter 5: No replies -->
+      <div class="filter-card" id="fc-replies">
+        <div class="filter-header" onclick="toggleFilter('replies')">
+          <div class="filter-title">💬 Solo comentarios principales (sin replies)
+            <span class="filter-badge" id="fb-replies">OFF</span>
+          </div>
+          <label class="toggle" onclick="event.stopPropagation()">
+            <input type="checkbox" id="ft-replies" onchange="onFilterToggle('replies')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="filter-body" id="fb-body-replies">
+          <div style="margin-top:4px;font-size:12px;color:var(--muted);line-height:1.6">Excluye respuestas a otros comentarios. Solo participan quienes comentaron directamente en la publicación.</div>
+        </div>
+      </div>
+
+      <div id="filterSummaryWrap" style="display:none;margin-top:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Filtros activos:</div>
+        <div class="filter-summary" id="filterSummary"></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-head"><div class="card-icon">🚫</div><div class="card-title">Excluir participantes</div></div>
-      <div class="card-desc">Tocá un participante para excluirlo. Tocalo de nuevo para reincluirlo.</div>
+      <div class="card-head"><div class="card-icon">📌</div><div class="card-title">Requisitos visuales (recordatorio)</div></div>
+      <div class="card-desc">Para requisitos que no se pueden verificar automáticamente (seguir la cuenta, compartir en historias, etc.).</div>
+      <div class="row">
+        <input type="text" id="reqInput" placeholder='Ej: "Seguir la cuenta" o "Compartir en historias"' />
+        <button class="btn btn-outline btn-sm" onclick="addReq()">+ Agregar</button>
+      </div>
+      <div class="tags-wrap mt-10" id="reqPills">
+        <div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-icon">🚫</div><div class="card-title">Excluir manualmente</div></div>
+      <div class="card-desc">Tocá un participante para excluirlo individualmente. Los <span style="background:#fef9c3;border:1px solid #fde047;padding:1px 6px;border-radius:4px;font-size:11px">amarillos</span> fueron excluidos por un filtro automático.</div>
       <div class="tags-wrap" id="excludeList">
         <div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>
       </div>
@@ -385,14 +366,11 @@ input:focus, textarea:focus { border-color:#833ab4; background:white; }
   <!-- ══ STEP 3 ══ -->
   <div class="section" id="step3">
     <div class="card" id="summaryCard"></div>
-
     <div class="card" id="histCard" style="display:none">
       <div class="card-head" style="margin-bottom:10px"><div class="card-icon">🏅</div><div class="card-title">Ganadores</div></div>
       <div id="histList"></div>
     </div>
-
     <button class="btn btn-grad" id="sortearBtn" onclick="iniciarSorteo()">🎰 ¡Sortear!</button>
-
     <div class="row mt-10">
       <button class="btn btn-outline" style="flex:1" onclick="goStep(2)">← Volver</button>
       <button class="btn btn-danger"  style="flex:1" onclick="resetAll()">🔄 Nuevo sorteo</button>
@@ -402,6 +380,7 @@ input:focus, textarea:focus { border-color:#833ab4; background:white; }
 
 <script>
 // ── State ──
+// participants: { '@user': { excluded: bool, autoExcluded: bool, count: int, text: string, isReply: bool } }
 let participants = {};
 let winners      = [];
 let requisitos   = [];
@@ -409,379 +388,435 @@ let requisitos   = [];
 // ── Build bookmarklet ──
 (function buildBookmarklet() {
   const appUrl = window.location.origin;
-
-  // This script runs ON instagram.com and sends comments back here
   const script = `(async function(){
-    const MAX_PAGES = 60;
+    const MAX_PAGES = 80;
     const delay = ms => new Promise(r => setTimeout(r, ms));
-
     function shortcode() {
       const m = location.pathname.match(/\\/(?:p|reel|tv)\\/([A-Za-z0-9_-]+)/);
       return m ? m[1] : null;
     }
-
     const sc = shortcode();
     if (!sc) { alert('Abrí una publicación de Instagram primero.'); return; }
 
-    // Get media_id via the page's own JSON endpoint (same origin, no CORS)
     const pageRes = await fetch('/api/v1/media/' + sc + '/info/', {
-      credentials: 'include',
-      headers: { 'X-IG-App-ID': '936619743392459' }
+      credentials:'include', headers:{'X-IG-App-ID':'936619743392459'}
     });
-
     let mediaId;
-    if (pageRes.ok) {
-      const d = await pageRes.json();
-      mediaId = d?.items?.[0]?.pk || d?.items?.[0]?.id;
-    }
-
-    // Fallback: extract from page source
+    if (pageRes.ok) { const d = await pageRes.json(); mediaId = d?.items?.[0]?.pk || d?.items?.[0]?.id; }
     if (!mediaId) {
-      const html = document.documentElement.innerHTML;
-      const m = html.match(/"media_id":"(\\d+)"/);
+      const m = document.documentElement.innerHTML.match(/"media_id":"(\\d+)"/);
       if (m) mediaId = m[1];
     }
-
     if (!mediaId) {
-      // Last fallback: use GraphQL shortcode endpoint
-      const gRes = await fetch('/p/' + sc + '/?__a=1&__d=dis', { credentials: 'include' });
-      if (gRes.ok) {
-        try {
-          const gData = await gRes.json();
-          mediaId = gData?.items?.[0]?.pk || gData?.graphql?.shortcode_media?.id;
-        } catch(e) {}
-      }
+      const gRes = await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});
+      if (gRes.ok) { try { const g=await gRes.json(); mediaId=g?.items?.[0]?.pk||g?.graphql?.shortcode_media?.id; } catch(e){} }
     }
-
-    if (!mediaId) { alert('No se pudo obtener el ID de la publicación. Intentá recargar la página de Instagram.'); return; }
+    if (!mediaId) { alert('No se pudo obtener el ID de la publicación. Recargá la página de Instagram e intentá de nuevo.'); return; }
 
     const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:white;padding:14px 20px;border-radius:12px;font-family:sans-serif;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.3);min-width:220px;text-align:center';
-    toast.textContent = '⏳ Extrayendo comentarios...';
+    toast.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:white;padding:14px 20px;border-radius:12px;font-family:sans-serif;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.3);min-width:240px;text-align:center;transition:opacity .3s';
+    toast.textContent='⏳ Conectando con Instagram...';
     document.body.appendChild(toast);
 
+    // Map: username -> { count, text (last comment), isReply }
     const users = new Map();
     let total = 0;
 
-    async function fetchPage(extraParam) {
-      let url = '/api/v1/media/' + mediaId + '/comments/?can_support_threading=true&permalink_enabled=false';
-      if (extraParam) url += '&' + extraParam;
-      const res = await fetch(url, {
-        credentials: 'include',
-        headers: { 'X-IG-App-ID': '936619743392459', 'X-Requested-With': 'XMLHttpRequest' }
+    function processComment(c, isReply) {
+      const u = c?.user?.username;
+      if (!u) return;
+      const key = u.toLowerCase();
+      const existing = users.get(key);
+      users.set(key, {
+        count: (existing?.count||0)+1,
+        text: c.text || '',
+        isReply: isReply && !(existing?.count)  // mark as reply only if first occurrence is a reply
       });
+    }
+
+    async function fetchPage(extraParam) {
+      let url='/api/v1/media/'+mediaId+'/comments/?can_support_threading=true&permalink_enabled=false';
+      if (extraParam) url+='&'+extraParam;
+      const res=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
       if (!res.ok) return null;
       return res.json();
     }
 
-    // First page — no cursor, gets newest comments + total count
     const first = await fetchPage(null);
-    if (!first) { toast.textContent = '❌ No se pudo acceder a los comentarios'; setTimeout(()=>toast.remove(),3000); return; }
+    if (!first) { toast.textContent='❌ No se pudo acceder a los comentarios'; setTimeout(()=>toast.remove(),3000); return; }
 
     total = first?.comment_count || 0;
-    (first?.comments || []).forEach(c => {
-      const u = c?.user?.username;
-      if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
+    (first?.comments||[]).forEach(c => {
+      processComment(c, false);
+      // also grab top-level preview replies
+      (c?.preview_child_comments||[]).forEach(r => processComment(r, true));
     });
-    toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
+    toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
 
-    // Paginate BACKWARDS (older comments) using next_min_id
-    let minId = first?.next_min_id;
-    let pageB = 0;
-    while (minId && pageB < MAX_PAGES) {
-      await delay(300);
-      const data = await fetchPage('min_id=' + minId);
-      if (!data) break;
-      (data?.comments || []).forEach(c => {
-        const u = c?.user?.username;
-        if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
+    // Paginate backwards
+    let minId=first?.next_min_id, pageB=0;
+    while(minId && pageB<MAX_PAGES){
+      await delay(280);
+      const data=await fetchPage('min_id='+minId);
+      if(!data) break;
+      (data?.comments||[]).forEach(c=>{
+        processComment(c,false);
+        (c?.preview_child_comments||[]).forEach(r=>processComment(r,true));
       });
-      toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
-      const next = data?.next_min_id;
-      if (!next || (data?.comments||[]).length === 0) break;
-      minId = next;
-      pageB++;
+      toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
+      const next=data?.next_min_id;
+      if(!next||(data?.comments||[]).length===0) break;
+      minId=next; pageB++;
     }
 
-    // Paginate FORWARDS (newer comments) using next_max_id if present
-    let maxId = first?.next_max_id;
-    let pageF = 0;
-    while (maxId && pageF < MAX_PAGES) {
-      await delay(300);
-      const data = await fetchPage('max_id=' + maxId);
-      if (!data) break;
-      (data?.comments || []).forEach(c => {
-        const u = c?.user?.username;
-        if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
+    // Paginate forwards
+    let maxId=first?.next_max_id, pageF=0;
+    while(maxId && pageF<MAX_PAGES){
+      await delay(280);
+      const data=await fetchPage('max_id='+maxId);
+      if(!data) break;
+      (data?.comments||[]).forEach(c=>{
+        processComment(c,false);
+        (c?.preview_child_comments||[]).forEach(r=>processComment(r,true));
       });
-      toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
-      const next = data?.next_max_id;
-      if (!next || (data?.comments||[]).length === 0) break;
-      maxId = next;
-      pageF++;
+      toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
+      const next=data?.next_max_id;
+      if(!next||(data?.comments||[]).length===0) break;
+      maxId=next; pageF++;
     }
 
-    if (users.size === 0) { toast.textContent = '❌ No se encontraron comentarios'; setTimeout(() => toast.remove(), 3000); return; }
+    if(users.size===0){toast.textContent='❌ No se encontraron comentarios';setTimeout(()=>toast.remove(),3000);return;}
+    toast.textContent='✅ '+users.size+' participantes encontrados. Abriendo app...';
 
-    toast.textContent = '✅ ' + users.size + ' participantes. Abriendo app...';
-
-    const payload = JSON.stringify({ users: Object.fromEntries(users), total });
-    const encoded = encodeURIComponent(payload);
-    setTimeout(() => { window.open('${appUrl}/?data=' + encoded, '_blank'); toast.remove(); }, 800);
+    const usersObj={};
+    users.forEach((v,k)=>{ usersObj[k]={count:v.count,text:v.text,isReply:v.isReply}; });
+    const payload=JSON.stringify({users:usersObj,total});
+    const encoded=encodeURIComponent(payload);
+    setTimeout(()=>{ window.open('${appUrl}/?data='+encoded,'_blank'); toast.remove(); },900);
   })();`;
 
-  const href = 'javascript:' + encodeURIComponent(script);
-  document.getElementById('bookmarkletLink').href = href;
+  document.getElementById('bookmarkletLink').href = 'javascript:' + encodeURIComponent(script);
 })();
 
-// ── Read data from URL on load ──
-(function readUrlData() {
-  const params = new URLSearchParams(window.location.search);
-  const raw    = params.get('data');
-  if (!raw) return;
-
+// ── Read URL data ──
+(function readUrlData(){
+  const raw = new URLSearchParams(window.location.search).get('data');
+  if(!raw) return;
   try {
     const data = JSON.parse(decodeURIComponent(raw));
-    if (data.users && typeof data.users === 'object') {
-      participants = {};
-      Object.entries(data.users).forEach(([u, count]) => {
-        participants['@' + u] = { excluded: false, count };
+    if(data.users && typeof data.users==='object'){
+      participants={};
+      Object.entries(data.users).forEach(([u,v])=>{
+        const info = typeof v==='object' ? v : {count:v,text:'',isReply:false};
+        participants['@'+u]={excluded:false,autoExcluded:false,count:info.count,text:info.text||'',isReply:!!info.isReply};
       });
-      const total = data.total || Object.keys(participants).length;
+      const total=data.total||Object.keys(participants).length;
       document.getElementById('loadedBanner').classList.add('show');
-      document.getElementById('loadedMsg').textContent =
-        Object.keys(participants).length + ' participantes únicos cargados (de ' + total + ' comentarios totales)';
+      document.getElementById('loadedMsg').textContent=Object.keys(participants).length+' participantes únicos cargados ('+total+' comentarios totales)';
       renderTags();
-      // Clean URL
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.replaceState({},'',window.location.pathname);
     }
-  } catch(e) { console.error('Error parsing data:', e); }
+  } catch(e){ console.error(e); }
 })();
 
-// ── Navigation ──
-function goStep(n) {
-  [1,2,3].forEach(i => {
-    document.getElementById('step'+i).classList.toggle('active', i===n);
-    const btn = document.getElementById('s'+i+'btn');
-    btn.classList.toggle('active', i===n);
-    btn.classList.toggle('done', i<n);
+// ── Filter logic ──
+function getFilterConfig(){
+  return {
+    mentions: { on: document.getElementById('ft-mentions').checked, val: parseInt(document.getElementById('fv-mentions').value)||1 },
+    keyword:  { on: document.getElementById('ft-keyword').checked,  val: document.getElementById('fv-keyword').value.trim().toLowerCase() },
+    words:    { on: document.getElementById('ft-words').checked,    val: parseInt(document.getElementById('fv-words').value)||2 },
+    bots:     { on: document.getElementById('ft-bots').checked },
+    replies:  { on: document.getElementById('ft-replies').checked },
+  };
+}
+
+function isBotUsername(u){
+  const name=u.replace('@','');
+  if(name.length<3) return true;
+  if(/\d{6,}/.test(name)) return true; // 6+ consecutive digits
+  if(/^user\d{5,}/i.test(name)) return true;
+  if((name.match(/\d/g)||[]).length / name.length > 0.6 && name.length>6) return true; // >60% digits
+  return false;
+}
+
+function countMentions(text){
+  return (text.match(/@[a-zA-Z0-9._]{1,30}/g)||[]).length;
+}
+
+function countWords(text){
+  // strip mentions and emojis for word count
+  const clean=text.replace(/@\S+/g,'').replace(/[\u{1F300}-\u{1FFFF}]/gu,'').trim();
+  return clean.split(/\s+/).filter(w=>w.length>0).length;
+}
+
+function shouldAutoExclude(u, p, cfg){
+  if(cfg.bots.on    && isBotUsername(u))                              return '🤖 Posible bot';
+  if(cfg.replies.on && p.isReply)                                     return '💬 Es reply';
+  if(cfg.mentions.on && countMentions(p.text) < cfg.mentions.val)     return '👥 Pocas menciones ('+countMentions(p.text)+'/'+cfg.mentions.val+')';
+  if(cfg.keyword.on  && cfg.keyword.val && !p.text.toLowerCase().includes(cfg.keyword.val)) return '🔤 Sin la frase';
+  if(cfg.words.on    && countWords(p.text) < cfg.words.val)           return '📝 Comentario muy corto';
+  return null;
+}
+
+function applyFilters(){
+  const cfg=getFilterConfig();
+  Object.keys(participants).forEach(u=>{
+    const p=participants[u];
+    if(!p.excluded){ // only auto-manage if not manually excluded
+      const reason=shouldAutoExclude(u,p,cfg);
+      p.autoExcluded=!!reason;
+      p.autoReason=reason||'';
+    }
   });
-  if(n===2) renderExcludeList();
+  renderTags();
+  renderExcludeList();
+  updateFilterSummary(cfg);
+}
+
+function updateFilterSummary(cfg){
+  const wrap=document.getElementById('filterSummaryWrap');
+  const cont=document.getElementById('filterSummary');
+  const active=[];
+  if(cfg.mentions.on) active.push('👥 Mín. '+cfg.mentions.val+' menciones');
+  if(cfg.keyword.on && cfg.keyword.val)  active.push('🔤 Contiene "'+cfg.keyword.val+'"');
+  if(cfg.words.on)    active.push('📝 Mín. '+cfg.words.val+' palabras');
+  if(cfg.bots.on)     active.push('🤖 Sin bots');
+  if(cfg.replies.on)  active.push('💬 Sin replies');
+  wrap.style.display=active.length?'block':'none';
+  cont.innerHTML=active.map(a=>'<div class="fsummary-pill">'+a+'</div>').join('');
+}
+
+function toggleFilter(name){
+  const body=document.getElementById('fb-body-'+name);
+  body.classList.toggle('open');
+}
+
+function onFilterToggle(name){
+  const on=document.getElementById('ft-'+name).checked;
+  const badge=document.getElementById('fb-'+name);
+  const card=document.getElementById('fc-'+name);
+  badge.textContent=on?'ON':'OFF';
+  badge.classList.toggle('on',on);
+  card.classList.toggle('active-filter',on);
+  if(on) document.getElementById('fb-body-'+name).classList.add('open');
+  applyFilters();
+}
+
+// ── Navigation ──
+function goStep(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).classList.toggle('active',i===n);
+    const btn=document.getElementById('s'+i+'btn');
+    btn.classList.toggle('active',i===n);
+    btn.classList.toggle('done',i<n);
+  });
+  if(n===2){ applyFilters(); renderExcludeList(); }
   if(n===3) renderSummary();
 }
 
 // ── Tags ──
-function renderTags() {
-  const wrap = document.getElementById('tagList');
-  const keys = Object.keys(participants);
-  const excl = keys.filter(k=>participants[k].excluded).length;
-  const elig = keys.length - excl;
-
-  document.getElementById('counterRow').style.display = keys.length ? 'grid' : 'none';
-  document.getElementById('cTotal').textContent = keys.length;
-  document.getElementById('cExcl').textContent  = excl;
-  document.getElementById('cElig').textContent  = elig;
-
-  if(!keys.length) {
-    wrap.innerHTML = '<div class="empty"><div class="empty-icon">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div>';
+function renderTags(){
+  const wrap=document.getElementById('tagList');
+  const keys=Object.keys(participants);
+  const excl=keys.filter(k=>participants[k].excluded||participants[k].autoExcluded).length;
+  const elig=keys.length-excl;
+  document.getElementById('counterRow').style.display=keys.length?'grid':'none';
+  document.getElementById('cTotal').textContent=keys.length;
+  document.getElementById('cExcl').textContent=excl;
+  document.getElementById('cElig').textContent=elig;
+  if(!keys.length){
+    wrap.innerHTML='<div class="empty"><div class="empty-icon">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div>';
     return;
   }
-  wrap.innerHTML = '';
-  keys.sort().forEach(u => {
-    const p = participants[u];
-    const tag = document.createElement('div');
-    tag.className = 'tag' + (p.excluded ? ' excluded' : '');
-    tag.innerHTML = u + (p.count>1 ? ' ×'+p.count : '') + '<span class="tag-x">✕</span>';
-    tag.onclick = () => { delete participants[u]; renderTags(); };
+  wrap.innerHTML='';
+  keys.sort().forEach(u=>{
+    const p=participants[u];
+    const isEx=p.excluded||p.autoExcluded;
+    const tag=document.createElement('div');
+    tag.className='tag'+(p.excluded?' excluded':p.autoExcluded?' auto-excluded':'');
+    tag.title=p.autoExcluded?('Filtrado: '+p.autoReason):(p.excluded?'Excluido manualmente':'');
+    tag.innerHTML=u+(p.count>1?' ×'+p.count:'')+'<span class="tag-x">✕</span>';
+    tag.onclick=()=>{ delete participants[u]; renderTags(); };
     wrap.appendChild(tag);
   });
 }
 
-function addManual() {
-  let v = document.getElementById('manualInput').value.trim();
+function addManual(){
+  let v=document.getElementById('manualInput').value.trim();
   if(!v) return;
-  if(!v.startsWith('@')) v = '@'+v;
-  v = v.toLowerCase();
-  participants[v] = participants[v] || { excluded:false, count:1 };
-  document.getElementById('manualInput').value = '';
+  if(!v.startsWith('@')) v='@'+v;
+  v=v.toLowerCase();
+  participants[v]=participants[v]||{excluded:false,autoExcluded:false,count:1,text:'',isReply:false};
+  document.getElementById('manualInput').value='';
   renderTags();
 }
 
 // ── Requisitos ──
-function addReq() {
-  const v = document.getElementById('reqInput').value.trim();
+function addReq(){
+  const v=document.getElementById('reqInput').value.trim();
   if(!v) return;
   requisitos.push(v);
-  document.getElementById('reqInput').value = '';
+  document.getElementById('reqInput').value='';
   renderReqs();
 }
-function removeReq(i) { requisitos.splice(i,1); renderReqs(); }
-function renderReqs() {
-  const c = document.getElementById('reqPills');
-  if(!requisitos.length) {
-    c.innerHTML = '<div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>';
-    return;
-  }
-  c.innerHTML = '';
-  requisitos.forEach((r,i) => {
-    const d = document.createElement('div');
-    d.className = 'req-pill';
-    d.innerHTML = r + ' <span class="req-x" onclick="removeReq('+i+')">✕</span>';
+function removeReq(i){ requisitos.splice(i,1); renderReqs(); }
+function renderReqs(){
+  const c=document.getElementById('reqPills');
+  if(!requisitos.length){ c.innerHTML='<div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>'; return; }
+  c.innerHTML='';
+  requisitos.forEach((r,i)=>{
+    const d=document.createElement('div'); d.className='req-pill';
+    d.innerHTML=r+' <span class="req-x" onclick="removeReq('+i+')">✕</span>';
     c.appendChild(d);
   });
 }
 
 // ── Exclude list ──
-function renderExcludeList() {
-  const c = document.getElementById('excludeList');
-  const keys = Object.keys(participants);
-  if(!keys.length) {
-    c.innerHTML = '<div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>';
-    return;
-  }
-  c.innerHTML = '';
-  keys.sort().forEach(u => {
-    const p = participants[u];
-    const tag = document.createElement('div');
-    tag.className = 'tag' + (p.excluded ? ' excluded' : '');
-    tag.innerHTML = (p.excluded?'🚫 ':'') + u + '<span class="tag-x">'+(p.excluded?'↩':'✕')+'</span>';
-    tag.onclick = () => { participants[u].excluded = !p.excluded; renderExcludeList(); renderTags(); };
+function renderExcludeList(){
+  const c=document.getElementById('excludeList');
+  const keys=Object.keys(participants);
+  if(!keys.length){ c.innerHTML='<div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>'; return; }
+  c.innerHTML='';
+  keys.sort().forEach(u=>{
+    const p=participants[u];
+    const tag=document.createElement('div');
+    tag.className='tag'+(p.excluded?' excluded':p.autoExcluded?' auto-excluded':'');
+    tag.title=p.autoExcluded?('Auto-filtrado: '+p.autoReason):'';
+    const icon=p.autoExcluded?'🟡 ':p.excluded?'🚫 ':'';
+    tag.innerHTML=icon+u+(p.autoExcluded?' <small style="opacity:.6;font-size:10px">('+p.autoReason+')</small>':'')+'<span class="tag-x">'+(p.excluded?'↩':'✕')+'</span>';
+    tag.onclick=()=>{ participants[u].excluded=!p.excluded; renderExcludeList(); renderTags(); };
     c.appendChild(tag);
   });
 }
 
 // ── Summary ──
-function renderSummary() {
-  const active  = Object.keys(participants).filter(k=>!participants[k].excluded);
-  const excl    = Object.keys(participants).filter(k=>participants[k].excluded);
-  const already = winners.map(w=>w.name);
-  const elig    = active.filter(u=>!already.includes(u));
-  const nw      = parseInt(document.getElementById('numWinners').value)||1;
-  const name    = document.getElementById('sorteoName').value || 'Sorteo sin nombre';
+function renderSummary(){
+  const cfg=getFilterConfig();
+  applyFilters();
+  const active=Object.keys(participants).filter(k=>!participants[k].excluded&&!participants[k].autoExcluded);
+  const excl=Object.keys(participants).filter(k=>participants[k].excluded||participants[k].autoExcluded);
+  const already=winners.map(w=>w.name);
+  const elig=active.filter(u=>!already.includes(u));
+  const nw=parseInt(document.getElementById('numWinners').value)||1;
+  const name=document.getElementById('sorteoName').value||'Sorteo sin nombre';
 
-  const reqHtml = requisitos.length
-    ? requisitos.map(r=>'<div style="font-size:13px;padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px">✅ <span>'+r+'</span></div>').join('')
-    : '<div style="font-size:13px;color:var(--muted);font-style:italic">Sin requisitos definidos</div>';
+  const reqHtml=requisitos.length
+    ?requisitos.map(r=>'<div style="font-size:13px;padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px">✅ <span>'+r+'</span></div>').join('')
+    :'<div style="font-size:13px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>';
 
-  document.getElementById('summaryCard').innerHTML = `
+  // Active filters summary
+  const activeFilters=[];
+  if(cfg.mentions.on) activeFilters.push('Mín. '+cfg.mentions.val+' menciones');
+  if(cfg.keyword.on&&cfg.keyword.val) activeFilters.push('Contiene "'+cfg.keyword.val+'"');
+  if(cfg.words.on) activeFilters.push('Mín. '+cfg.words.val+' palabras');
+  if(cfg.bots.on) activeFilters.push('Sin bots');
+  if(cfg.replies.on) activeFilters.push('Sin replies');
+  const filtersHtml=activeFilters.length
+    ?'<div style="font-size:13px;font-weight:700;margin-bottom:8px;margin-top:14px">Filtros automáticos activos</div>'+activeFilters.map(f=>'<div style="font-size:13px;padding:5px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px">⚙️ <span>'+f+'</span></div>').join('')
+    :'';
+
+  document.getElementById('summaryCard').innerHTML=`
     <div class="card-head" style="margin-bottom:10px"><div class="card-icon">📊</div><div class="card-title">Resumen</div></div>
     <div style="font-size:16px;font-weight:800;margin-bottom:14px">${name}</div>
     <div class="counter-row" style="margin-bottom:16px">
       <div class="counter-cell total"><div class="counter-num">${active.length}</div><div class="counter-lbl">participantes</div></div>
-      <div class="counter-cell excl" ><div class="counter-num">${excl.length}</div><div class="counter-lbl">excluidos</div></div>
-      <div class="counter-cell elig" ><div class="counter-num">${elig.length}</div><div class="counter-lbl">elegibles</div></div>
+      <div class="counter-cell excl"><div class="counter-num">${excl.length}</div><div class="counter-lbl">excluidos</div></div>
+      <div class="counter-cell elig"><div class="counter-num">${elig.length}</div><div class="counter-lbl">elegibles</div></div>
     </div>
-    <div style="font-size:13px;font-weight:700;margin-bottom:8px">Requisitos</div>
+    ${filtersHtml}
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px;margin-top:14px">Requisitos manuales</div>
     ${reqHtml}
     <div style="margin-top:14px;font-size:13px;font-weight:700">Ganadores a sortear: <span style="color:#833ab4">${nw}</span></div>
   `;
 
-  const btn = document.getElementById('sortearBtn');
-  btn.disabled  = elig.length === 0;
-  btn.innerHTML = elig.length ? '🎰 ¡Sortear! — ' + elig.length + ' elegibles' : 'Sin participantes elegibles';
+  const btn=document.getElementById('sortearBtn');
+  btn.disabled=elig.length===0;
+  btn.innerHTML=elig.length?'🎰 ¡Sortear! — '+elig.length+' elegibles':'Sin participantes elegibles';
   renderHistorial();
 }
 
 // ── Sorteo ──
-function iniciarSorteo() {
-  const active  = Object.keys(participants).filter(k=>!participants[k].excluded);
-  const already = winners.map(w=>w.name);
-  const elig    = active.filter(u=>!already.includes(u));
+function iniciarSorteo(){
+  const active=Object.keys(participants).filter(k=>!participants[k].excluded&&!participants[k].autoExcluded);
+  const already=winners.map(w=>w.name);
+  const elig=active.filter(u=>!already.includes(u));
   if(!elig.length) return;
-  const winner = elig[Math.floor(Math.random() * elig.length)];
-  animateRoulette(elig, winner);
+  animateRoulette(elig, elig[Math.floor(Math.random()*elig.length)]);
 }
 
-function animateRoulette(pool, winner) {
-  const overlay = document.getElementById('spinOverlay');
-  const list    = document.getElementById('rouletteList');
+function animateRoulette(pool,winner){
+  const overlay=document.getElementById('spinOverlay');
+  const list=document.getElementById('rouletteList');
   overlay.classList.add('show');
-
-  const items = [];
-  for(let i=0; i<30; i++) items.push(pool[Math.floor(Math.random()*pool.length)]);
+  const items=[];
+  for(let i=0;i<30;i++) items.push(pool[Math.floor(Math.random()*pool.length)]);
   items.push(winner);
-
-  list.innerHTML = items.map(u=>'<div class="roulette-item">'+u+'</div>').join('');
-  list.style.transition = 'none';
-  list.style.transform  = 'translateY(58px)';
-
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    const offset = -(30 * 44) + 58;
-    list.style.transition = 'transform 3s cubic-bezier(.08,.92,.15,1)';
-    list.style.transform  = 'translateY('+offset+'px)';
+  list.innerHTML=items.map(u=>'<div class="roulette-item">'+u+'</div>').join('');
+  list.style.transition='none'; list.style.transform='translateY(58px)';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    list.style.transition='transform 3s cubic-bezier(.08,.92,.15,1)';
+    list.style.transform='translateY('+(-(30*44)+58)+'px)';
   }));
-
-  setTimeout(() => { overlay.classList.remove('show'); showWinner(winner); }, 3400);
+  setTimeout(()=>{ overlay.classList.remove('show'); showWinner(winner); },3400);
 }
 
-function showWinner(winner) {
-  const nw = parseInt(document.getElementById('numWinners').value)||1;
-  winners.push({ name:winner, time:new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}) });
-  document.getElementById('wName').textContent = winner;
-  document.getElementById('wSub').textContent  = 'Ganador '+winners.length+' de '+nw;
+function showWinner(winner){
+  const nw=parseInt(document.getElementById('numWinners').value)||1;
+  winners.push({name:winner,time:new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})});
+  document.getElementById('wName').textContent=winner;
+  document.getElementById('wSub').textContent='Ganador '+winners.length+' de '+nw;
   document.getElementById('winOverlay').classList.add('show');
-  launchConfetti();
-  renderHistorial();
-  renderSummary();
+  launchConfetti(); renderHistorial(); renderSummary();
 }
 
-function closeWin()     { document.getElementById('winOverlay').classList.remove('show'); }
-function sortearOtro()  {
+function closeWin(){ document.getElementById('winOverlay').classList.remove('show'); }
+function sortearOtro(){
   closeWin();
-  const nw = parseInt(document.getElementById('numWinners').value)||1;
-  if(winners.length >= nw) { alert('Ya se sortearon los '+nw+' ganadores.'); return; }
-  setTimeout(iniciarSorteo, 350);
+  const nw=parseInt(document.getElementById('numWinners').value)||1;
+  if(winners.length>=nw){alert('Ya se sortearon los '+nw+' ganadores.');return;}
+  setTimeout(iniciarSorteo,350);
 }
 
-// ── Historial ──
-function renderHistorial() {
-  const card = document.getElementById('histCard');
-  const list = document.getElementById('histList');
-  if(!winners.length) { card.style.display='none'; return; }
-  card.style.display = 'block';
-  list.innerHTML = winners.map((w,i)=>
-    '<div class="hist-item"><span style="font-weight:600">'+(i+1)+'. <span class="hist-name">'+w.name+'</span></span><span class="hist-time">'+w.time+'</span></div>'
-  ).join('');
+function renderHistorial(){
+  const card=document.getElementById('histCard');
+  const list=document.getElementById('histList');
+  if(!winners.length){card.style.display='none';return;}
+  card.style.display='block';
+  list.innerHTML=winners.map((w,i)=>'<div class="hist-item"><span style="font-weight:600">'+(i+1)+'. <span class="hist-name">'+w.name+'</span></span><span class="hist-time">'+w.time+'</span></div>').join('');
 }
 
-// ── Reset ──
-function resetAll() {
+function resetAll(){
   if(!confirm('¿Resetear todo el sorteo?')) return;
-  participants = {}; winners = []; requisitos = [];
-  document.getElementById('sorteoName').value = '';
-  document.getElementById('numWinners').value = '1';
+  participants={}; winners=[]; requisitos=[];
+  document.getElementById('sorteoName').value='';
+  document.getElementById('numWinners').value='1';
   document.getElementById('loadedBanner').classList.remove('show');
-  renderTags(); renderReqs(); renderHistorial();
-  goStep(1);
+  // reset filters
+  ['mentions','keyword','words','bots','replies'].forEach(n=>{
+    document.getElementById('ft-'+n).checked=false;
+    onFilterToggle(n);
+  });
+  renderTags(); renderReqs(); renderHistorial(); goStep(1);
 }
 
-// ── Confetti ──
-function launchConfetti() {
-  const cvs = document.getElementById('cvs');
-  const ctx = cvs.getContext('2d');
-  cvs.width = innerWidth; cvs.height = innerHeight;
-  const clrs = ['#833ab4','#fd1d1d','#fcb045','#f9ca24','#6ab04c','#38bdf8','#f472b6'];
-  const ps = Array.from({length:160}, ()=>({
-    x:Math.random()*cvs.width, y:-20, r:Math.random()*6+3, d:Math.random()*4+2,
-    c:clrs[Math.floor(Math.random()*clrs.length)], ta:0, ts:Math.random()*.1+.04, sq:Math.random()<.5
-  }));
+function launchConfetti(){
+  const cvs=document.getElementById('cvs');
+  const ctx=cvs.getContext('2d');
+  cvs.width=innerWidth; cvs.height=innerHeight;
+  const clrs=['#833ab4','#fd1d1d','#fcb045','#f9ca24','#6ab04c','#38bdf8','#f472b6'];
+  const ps=Array.from({length:160},()=>({x:Math.random()*cvs.width,y:-20,r:Math.random()*6+3,d:Math.random()*4+2,c:clrs[Math.floor(Math.random()*clrs.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()<.5}));
   let f=0;
   (function draw(){
     ctx.clearRect(0,0,cvs.width,cvs.height);
-    ps.forEach(p=>{
-      ctx.fillStyle=p.c; p.ta+=p.ts; p.y+=p.d; p.x+=Math.sin(p.ta)*.9;
-      ctx.beginPath();
-      if(p.sq){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.ta); ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore(); }
-      else { ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); }
-    });
+    ps.forEach(p=>{ctx.fillStyle=p.c;p.ta+=p.ts;p.y+=p.d;p.x+=Math.sin(p.ta)*.9;ctx.beginPath();if(p.sq){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.ta);ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);ctx.restore();}else{ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}});
     if(++f<200) requestAnimationFrame(draw);
     else ctx.clearRect(0,0,cvs.width,cvs.height);
   })();
 }
 
-// Keyboard shortcuts
-document.getElementById('reqInput').addEventListener('keydown',    e=>{ if(e.key==='Enter') addReq(); });
-document.getElementById('manualInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addManual(); });
+document.getElementById('reqInput').addEventListener('keydown',e=>{if(e.key==='Enter')addReq();});
+document.getElementById('manualInput').addEventListener('keydown',e=>{if(e.key==='Enter')addManual();});
+document.getElementById('fv-keyword').addEventListener('input',applyFilters);
 </script>
 </body>
 </html>
