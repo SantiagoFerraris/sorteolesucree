@@ -461,39 +461,64 @@ let requisitos   = [];
     document.body.appendChild(toast);
 
     const users = new Map();
-    let minId = null;
-    let page  = 0;
     let total = 0;
 
-    while (page < MAX_PAGES) {
-      let url = '/api/v1/media/' + mediaId + '/comments/?can_support_threading=true';
-      if (minId) url += '&min_id=' + minId;
-
+    async function fetchPage(extraParam) {
+      let url = '/api/v1/media/' + mediaId + '/comments/?can_support_threading=true&permalink_enabled=false';
+      if (extraParam) url += '&' + extraParam;
       const res = await fetch(url, {
         credentials: 'include',
-        headers: {
-          'X-IG-App-ID': '936619743392459',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
+        headers: { 'X-IG-App-ID': '936619743392459', 'X-Requested-With': 'XMLHttpRequest' }
       });
+      if (!res.ok) return null;
+      return res.json();
+    }
 
-      if (!res.ok) break;
-      const data = await res.json();
-      const comments = data?.comments || [];
+    // First page — no cursor, gets newest comments + total count
+    const first = await fetchPage(null);
+    if (!first) { toast.textContent = '❌ No se pudo acceder a los comentarios'; setTimeout(()=>toast.remove(),3000); return; }
 
-      comments.forEach(c => {
+    total = first?.comment_count || 0;
+    (first?.comments || []).forEach(c => {
+      const u = c?.user?.username;
+      if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
+    });
+    toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
+
+    // Paginate BACKWARDS (older comments) using next_min_id
+    let minId = first?.next_min_id;
+    let pageB = 0;
+    while (minId && pageB < MAX_PAGES) {
+      await delay(300);
+      const data = await fetchPage('min_id=' + minId);
+      if (!data) break;
+      (data?.comments || []).forEach(c => {
         const u = c?.user?.username;
-        if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase()) || 0) + 1);
+        if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
       });
-
-      total = data?.comment_count || users.size;
-      toast.textContent = '⏳ Extrayendo... ' + users.size + ' participantes';
-
+      toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
       const next = data?.next_min_id;
-      if (!next || comments.length === 0) break;
+      if (!next || (data?.comments||[]).length === 0) break;
       minId = next;
-      page++;
-      await delay(350);
+      pageB++;
+    }
+
+    // Paginate FORWARDS (newer comments) using next_max_id if present
+    let maxId = first?.next_max_id;
+    let pageF = 0;
+    while (maxId && pageF < MAX_PAGES) {
+      await delay(300);
+      const data = await fetchPage('max_id=' + maxId);
+      if (!data) break;
+      (data?.comments || []).forEach(c => {
+        const u = c?.user?.username;
+        if (u) users.set(u.toLowerCase(), (users.get(u.toLowerCase())||0)+1);
+      });
+      toast.textContent = '⏳ Extrayendo... ' + users.size + '/' + total;
+      const next = data?.next_max_id;
+      if (!next || (data?.comments||[]).length === 0) break;
+      maxId = next;
+      pageF++;
     }
 
     if (users.size === 0) { toast.textContent = '❌ No se encontraron comentarios'; setTimeout(() => toast.remove(), 3000); return; }
