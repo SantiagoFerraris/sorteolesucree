@@ -3,820 +3,763 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sorteo Instagram</title>
+<title>SorteoIG — Le Sucrée</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 :root {
-  --grad: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-  --grad-soft: linear-gradient(135deg, #f5f0ff 0%, #fff0f0 50%, #fffaf0 100%);
-  --bg: #fafafa; --border: #e5e7eb; --text: #111; --muted: #6b7280;
-  --radius: 16px; --radius-sm: 10px; --shadow: 0 2px 12px rgba(0,0,0,.07);
+  --ig1:#833ab4; --ig2:#fd1d1d; --ig3:#fcb045;
+  --grad:linear-gradient(135deg,#833ab4 0%,#fd1d1d 50%,#fcb045 100%);
+  --grad-soft:linear-gradient(135deg,#f5f0ff 0%,#fff0f0 50%,#fffaf0 100%);
+  --bg:#f4f4f8; --surface:#fff; --border:#e8e8f0;
+  --text:#0f0f1a; --muted:#6b7280; --muted2:#9ca3af;
+  --r:14px; --r-sm:9px; --sh:0 2px 16px rgba(0,0,0,.06);
+  --sh-md:0 4px 24px rgba(0,0,0,.10);
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-.header { background:var(--grad); padding:28px 20px 24px; text-align:center; color:white; position:relative; overflow:hidden; }
-.header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 30% 60%,rgba(255,255,255,.18) 0%,transparent 60%); }
-.header-logo { font-size:26px; font-weight:800; letter-spacing:-1px; position:relative; }
-.header-logo em { font-style:normal; opacity:.7; font-weight:400; }
-.header-sub { font-size:13px; opacity:.85; margin-top:4px; position:relative; }
-.container { max-width:680px; margin:0 auto; padding:24px 16px 80px; }
-.steps { display:flex; background:white; border-radius:999px; padding:5px; border:1px solid var(--border); margin-bottom:24px; box-shadow:var(--shadow); }
-.step-btn { flex:1; padding:9px 4px; border-radius:999px; border:none; background:transparent; font-family:inherit; font-size:12px; font-weight:600; cursor:pointer; color:var(--muted); transition:all .25s; display:flex; align-items:center; justify-content:center; gap:5px; }
-.step-btn.active { background:var(--grad); color:white; }
-.step-btn.done { color:#16a34a; }
-.step-num { width:18px; height:18px; border-radius:50%; background:var(--border); color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
-.step-btn.active .step-num { background:rgba(255,255,255,.3); color:white; }
-.step-btn.done .step-num { background:#dcfce7; color:#16a34a; }
-.card { background:white; border-radius:var(--radius); border:1px solid var(--border); padding:20px; margin-bottom:14px; box-shadow:var(--shadow); }
-.card-head { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
-.card-icon { width:30px; height:30px; border-radius:9px; background:var(--grad-soft); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
-.card-title { font-size:15px; font-weight:700; }
-.card-desc { font-size:13px; color:var(--muted); margin:6px 0 14px; line-height:1.6; }
-.bm-box { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:var(--radius-sm); padding:18px; margin-bottom:14px; border:1px solid #2d2d5e; }
-.bm-label { font-size:12px; font-weight:700; color:#a78bfa; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
-.bm-button-wrap { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
-.bm-drag-btn { background:var(--grad); color:white; border:none; border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:700; cursor:grab; white-space:nowrap; box-shadow:0 4px 16px rgba(131,58,180,.4); text-decoration:none; display:inline-block; }
-.bm-hint { font-size:12px; color:#94a3b8; line-height:1.5; }
-.steps-list { counter-reset:step; list-style:none; padding:0; }
-.steps-list li { counter-increment:step; display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; line-height:1.5; }
-.steps-list li:last-child { border:none; }
-.steps-list li::before { content:counter(step); width:20px; height:20px; border-radius:50%; background:var(--grad); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; }
-input[type=text], input[type=number], textarea, select { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:inherit; font-size:14px; background:#f9f9f9; color:var(--text); transition:border-color .2s; outline:none; }
-input:focus, textarea:focus, select:focus { border-color:#833ab4; background:white; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* Filter cards */
-.filter-card { border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; transition:border-color .2s; }
-.filter-card.active-filter { border-color:#833ab4; background:#faf5ff; }
-.filter-header { display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
-.filter-title { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; }
-.filter-badge { font-size:10px; background:var(--grad-soft); border:1px solid #e9d5ff; color:#7c3aed; padding:2px 8px; border-radius:999px; font-weight:600; }
-.filter-badge.on { background:var(--grad); color:white; border:none; }
-.filter-body { margin-top:12px; display:none; }
-.filter-body.open { display:block; }
-.filter-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-.filter-row label { margin:0; white-space:nowrap; }
-.filter-row input[type=number] { width:70px; }
-.filter-row input[type=text] { flex:1; }
+/* ── Header ── */
+.hdr{background:var(--grad);padding:24px 20px 20px;text-align:center;color:#fff;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 60%,rgba(255,255,255,.2) 0%,transparent 55%);}
+.hdr-logo{font-size:24px;font-weight:900;letter-spacing:-1px;position:relative;}
+.hdr-logo em{font-style:normal;opacity:.65;font-weight:400;}
+.hdr-sub{font-size:12px;opacity:.8;margin-top:3px;position:relative;}
 
-/* Toggle switch */
-.toggle-wrap { display:flex; align-items:center; gap:8px; }
-.toggle { position:relative; width:38px; height:22px; flex-shrink:0; }
-.toggle input { opacity:0; width:0; height:0; }
-.toggle-slider { position:absolute; inset:0; background:#d1d5db; border-radius:999px; cursor:pointer; transition:.2s; }
-.toggle-slider::before { content:''; position:absolute; width:16px; height:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:.2s; }
-.toggle input:checked + .toggle-slider { background:#833ab4; }
-.toggle input:checked + .toggle-slider::before { transform:translateX(16px); }
+/* ── Steps ── */
+.steps-bar{display:flex;background:#fff;border-radius:999px;padding:4px;border:1px solid var(--border);margin:20px auto 0;max-width:500px;box-shadow:var(--sh);}
+.stp{flex:1;padding:8px 4px;border-radius:999px;border:none;background:transparent;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.stp.active{background:var(--grad);color:#fff;}
+.stp.done{color:#16a34a;}
+.stp-n{width:17px;height:17px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;}
+.stp.active .stp-n{background:rgba(255,255,255,.3);color:#fff;}
+.stp.done .stp-n{background:#dcfce7;color:#16a34a;}
 
-.counter-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
-.counter-cell { text-align:center; padding:12px 8px; border-radius:var(--radius-sm); }
-.counter-cell.total { background:var(--grad-soft); }
-.counter-cell.excl  { background:#fee2e2; }
-.counter-cell.elig  { background:#dcfce7; }
-.counter-num { font-size:22px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.counter-cell.excl .counter-num { background:none; -webkit-text-fill-color:#dc2626; }
-.counter-cell.elig .counter-num { background:none; -webkit-text-fill-color:#16a34a; }
-.counter-lbl { font-size:11px; color:var(--muted); margin-top:2px; }
+/* ── Layout ── */
+.page{max-width:680px;margin:0 auto;padding:20px 14px 80px;}
+.section{display:none;}.section.active{display:block;}
 
-.tags-wrap { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
-.tag { background:var(--grad-soft); border:1px solid #e9d5ff; border-radius:999px; padding:5px 11px; font-size:12px; font-weight:500; display:flex; align-items:center; gap:5px; cursor:pointer; transition:all .15s; }
-.tag:hover { opacity:.75; }
-.tag.excluded { background:#fee2e2; border-color:#fca5a5; text-decoration:line-through; opacity:.55; }
-.tag.auto-excluded { background:#fef9c3; border-color:#fde047; opacity:.7; }
-.tag-x { font-size:10px; opacity:.5; }
-.req-pill { background:#f3e8ff; border:1px solid #ddd6fe; color:#7c3aed; border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:5px; }
-.req-x { cursor:pointer; opacity:.6; font-size:11px; }
+/* ── Cards ── */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);padding:18px 20px;margin-bottom:12px;box-shadow:var(--sh);}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:3px;}
+.card-ico{width:28px;height:28px;border-radius:8px;background:var(--grad-soft);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.card-ttl{font-size:14px;font-weight:800;}
+.card-desc{font-size:12px;color:var(--muted);margin:5px 0 14px;line-height:1.6;}
 
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:11px 20px; border-radius:var(--radius-sm); border:none; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; }
-.btn-grad { background:var(--grad); color:white; width:100%; padding:15px; font-size:15px; border-radius:999px; box-shadow:0 4px 18px rgba(131,58,180,.3); }
-.btn-grad:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 6px 24px rgba(131,58,180,.4); }
-.btn-grad:disabled { opacity:.45; cursor:not-allowed; }
-.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--muted); font-size:13px; padding:9px 14px; }
-.btn-outline:hover { border-color:#833ab4; color:#833ab4; }
-.btn-sm { padding:7px 13px; font-size:12px; }
-.btn-danger { background:#fee2e2; color:#dc2626; font-size:12px; padding:8px 14px; }
+/* ── Bookmarklet ── */
+.bm-shell{background:linear-gradient(135deg,#0f0f1e,#1a1030);border-radius:var(--r-sm);padding:16px;margin-bottom:12px;border:1px solid #2a1a4e;}
+.bm-lbl{font-size:10px;font-weight:800;color:#a78bfa;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
+.bm-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.bm-btn{background:var(--grad);color:#fff;border:none;border-radius:999px;padding:10px 18px;font-family:inherit;font-size:13px;font-weight:800;cursor:grab;white-space:nowrap;text-decoration:none;display:inline-block;box-shadow:0 4px 16px rgba(131,58,180,.4);}
+.bm-hint{font-size:11px;color:#94a3b8;line-height:1.5;}
+.how-list{counter-reset:s;list-style:none;padding:0;}
+.how-list li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--muted);}
+.how-list li:last-child{border:none;}
+.how-list li::before{content:counter(s);width:18px;height:18px;border-radius:50%;background:var(--grad);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
 
-.row { display:flex; gap:8px; align-items:center; }
-.row > * { flex:1; }
-.row > .btn { flex:0 0 auto; }
-.mt-10 { margin-top:10px; }
-.mt-14 { margin-top:14px; }
-.empty { text-align:center; padding:28px 16px; color:var(--muted); font-size:13px; }
-.empty-icon { font-size:30px; margin-bottom:8px; }
-.section { display:none; }
-.section.active { display:block; }
-.loaded-banner { display:none; background:#dcfce7; border:1px solid #86efac; border-radius:var(--radius-sm); padding:12px 16px; margin-bottom:12px; font-size:13px; color:#166534; font-weight:600; align-items:center; gap:8px; }
-.loaded-banner.show { display:flex; }
+/* ── Inputs ── */
+label{font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--text);}
+input[type=text],input[type=number],textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:13px;background:#fafafa;color:var(--text);outline:none;transition:border-color .2s;}
+input:focus,textarea:focus{border-color:var(--ig1);background:#fff;}
+.mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;}
 
-/* filter summary pill */
-.filter-summary { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
-.fsummary-pill { background:#f0fdf4; border:1px solid #86efac; color:#15803d; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:600; display:flex; align-items:center; gap:4px; }
+/* ── Counters ── */
+.cnt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.cnt-cell{text-align:center;padding:10px 6px;border-radius:var(--r-sm);}
+.cnt-cell.tot{background:var(--grad-soft);}
+.cnt-cell.exc{background:#fee2e2;}
+.cnt-cell.elig{background:#dcfce7;}
+.cnt-n{font-size:20px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cnt-cell.exc .cnt-n{background:none;-webkit-text-fill-color:#dc2626;}
+.cnt-cell.elig .cnt-n{background:none;-webkit-text-fill-color:#16a34a;}
+.cnt-l{font-size:10px;color:var(--muted);margin-top:2px;}
 
-.hist-item { display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border); font-size:13px; }
-.hist-item:last-child { border:none; }
-.hist-name { font-weight:700; }
-.hist-time { font-size:11px; color:var(--muted); }
+/* ── Tags ── */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.tag{border-radius:999px;padding:4px 10px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;cursor:pointer;transition:all .15s;user-select:none;}
+.tag.ok{background:var(--grad-soft);border:1px solid #ddd6fe;color:#5b21b6;}
+.tag.ok:hover{opacity:.75;}
+.tag.man-ex{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;text-decoration:line-through;opacity:.7;}
+.tag.auto-ex{background:#fef9c3;border:1px solid #fde047;color:#854d0e;}
+.tag-x{font-size:9px;opacity:.5;margin-left:1px;}
 
-.overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(8px); z-index:90; align-items:center; justify-content:center; flex-direction:column; gap:18px; padding:24px; }
-.overlay.show { display:flex; }
-.roulette-shell { width:min(340px,92vw); background:white; border-radius:20px; overflow:hidden; box-shadow:0 0 60px rgba(131,58,180,.5); }
-.roulette-header { background:var(--grad); padding:14px 20px; color:white; text-align:center; font-size:14px; font-weight:700; }
-.roulette-viewport { height:160px; overflow:hidden; position:relative; background:#fafafa; }
-.roulette-viewport::before, .roulette-viewport::after { content:''; position:absolute; left:0; right:0; height:50px; z-index:2; pointer-events:none; }
-.roulette-viewport::before { top:0; background:linear-gradient(#fafafa,transparent); }
-.roulette-viewport::after  { bottom:0; background:linear-gradient(transparent,#fafafa); }
-.roulette-center { position:absolute; top:50%; left:12px; right:12px; transform:translateY(-50%); height:44px; border-radius:10px; background:var(--grad-soft); border:2px solid #e9d5ff; z-index:1; pointer-events:none; }
-.roulette-list { display:flex; flex-direction:column; align-items:stretch; will-change:transform; }
-.roulette-item { height:44px; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; padding:0 20px; text-align:center; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.spin-label { color:white; font-size:15px; font-weight:600; }
-.winner-card { background:white; border-radius:24px; padding:36px 28px; text-align:center; max-width:360px; width:100%; animation:popIn .4s cubic-bezier(.175,.885,.32,1.275); }
-@keyframes popIn { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
-.w-crown { font-size:50px; margin-bottom:6px; }
-.w-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-.w-name { font-size:28px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; word-break:break-all; margin-bottom:4px; line-height:1.2; }
-.w-sub { font-size:13px; color:var(--muted); margin-bottom:24px; }
-.w-actions { display:flex; flex-direction:column; gap:10px; }
-#cvs { position:fixed; inset:0; pointer-events:none; z-index:200; }
+/* ── Filter cards ── */
+.fc{border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:8px;transition:all .2s;}
+.fc.on{border-color:#c4b5fd;background:#faf5ff;}
+.fc-hd{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.fc-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;flex:1;}
+.fc-badge{font-size:9px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:999px;text-transform:uppercase;}
+.fc-badge.off{background:#f3f4f6;color:var(--muted2);}
+.fc-badge.on{background:var(--grad);color:#fff;}
+.fc-body{margin-top:10px;display:none;}
+.fc-body.open{display:block;}
+.fc-hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px;}
+.fc-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
+.fc-row label{margin:0;white-space:nowrap;min-width:fit-content;}
+.fc-row input[type=number]{width:64px;flex-shrink:0;}
+.fc-row input[type=text]{flex:1;}
 
-@media(max-width:480px){
-  .counter-row { grid-template-columns:1fr 1fr; }
-  .step-btn span { display:none; }
-}
+/* ── Toggle ── */
+.tog{position:relative;width:36px;height:20px;flex-shrink:0;}
+.tog input{opacity:0;width:0;height:0;}
+.tog-sl{position:absolute;inset:0;background:#d1d5db;border-radius:999px;cursor:pointer;transition:.2s;}
+.tog-sl::before{content:'';position:absolute;width:14px;height:14px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tog input:checked+.tog-sl{background:var(--ig1);}
+.tog input:checked+.tog-sl::before{transform:translateX(16px);}
+
+/* ── Req pills ── */
+.req-pill{background:#f3e8ff;border:1px solid #ddd6fe;color:#7c3aed;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px;}
+.req-x{cursor:pointer;opacity:.5;font-size:10px;}.req-x:hover{opacity:1;}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--r-sm);border:none;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-main{background:var(--grad);color:#fff;width:100%;padding:14px;font-size:14px;border-radius:999px;box-shadow:0 4px 18px rgba(131,58,180,.3);}
+.btn-main:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 24px rgba(131,58,180,.4);}
+.btn-main:disabled{opacity:.4;cursor:not-allowed;}
+.btn-out{background:transparent;border:1.5px solid var(--border);color:var(--muted);font-size:12px;padding:8px 14px;}
+.btn-out:hover{border-color:var(--ig1);color:var(--ig1);}
+.btn-sm{padding:6px 12px;font-size:11px;}
+.btn-red{background:#fee2e2;color:#dc2626;font-size:12px;padding:8px 14px;}
+.btn-red:hover{background:#fecaca;}
+.flex-row{display:flex;gap:8px;align-items:center;}
+.flex-row>*{flex:1;}.flex-row>.btn{flex:0 0 auto;}
+
+/* ── Banner ── */
+.banner{display:none;background:#dcfce7;border:1px solid #86efac;border-radius:var(--r-sm);padding:10px 14px;margin-bottom:10px;font-size:12px;color:#166534;font-weight:700;align-items:center;gap:8px;}
+.banner.show{display:flex;}
+
+/* ── Filter summary ── */
+.f-sum{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.f-pill{background:#f0fdf4;border:1px solid #86efac;color:#15803d;border-radius:999px;padding:3px 9px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px;}
+
+/* ── Overlays ── */
+.ov{display:none;position:fixed;inset:0;background:rgba(5,0,20,.85);backdrop-filter:blur(10px);z-index:100;align-items:center;justify-content:center;flex-direction:column;gap:16px;padding:20px;}
+.ov.show{display:flex;}
+
+/* roulette */
+.rou-shell{width:min(320px,88vw);background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 0 80px rgba(131,58,180,.6);}
+.rou-hdr{background:var(--grad);padding:12px 18px;color:#fff;text-align:center;font-size:13px;font-weight:800;}
+.rou-vp{height:154px;overflow:hidden;position:relative;background:#fafafa;}
+.rou-vp::before,.rou-vp::after{content:'';position:absolute;left:0;right:0;height:46px;z-index:2;pointer-events:none;}
+.rou-vp::before{top:0;background:linear-gradient(#fafafa,transparent);}
+.rou-vp::after{bottom:0;background:linear-gradient(transparent,#fafafa);}
+.rou-focus{position:absolute;top:50%;left:10px;right:10px;transform:translateY(-50%);height:42px;border-radius:8px;background:var(--grad-soft);border:2px solid #ddd6fe;z-index:1;pointer-events:none;}
+.rou-list{display:flex;flex-direction:column;align-items:stretch;will-change:transform;}
+.rou-item{height:42px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;padding:0 18px;text-align:center;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* winner */
+.win-card{background:#fff;border-radius:22px;padding:32px 26px;text-align:center;max-width:340px;width:100%;animation:pop .4s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes pop{from{transform:scale(.55);opacity:0}to{transform:scale(1);opacity:1}}
+.win-crown{font-size:48px;margin-bottom:4px;}
+.win-lbl{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.win-name{font-size:26px;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;word-break:break-all;margin-bottom:4px;line-height:1.2;}
+.win-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
+.win-acts{display:flex;flex-direction:column;gap:8px;}
+
+/* hist */
+.hist-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.hist-row:last-child{border:none;}
+.hist-n{font-weight:800;}
+.hist-t{font-size:10px;color:var(--muted2);}
+
+#cvs{position:fixed;inset:0;pointer-events:none;z-index:200;}
+
+.empty{text-align:center;padding:24px 14px;color:var(--muted2);font-size:12px;}
+.empty-ico{font-size:28px;margin-bottom:6px;}
+.spin-lbl{color:#fff;font-size:14px;font-weight:700;letter-spacing:.3px;}
+@media(max-width:480px){.cnt-grid{grid-template-columns:1fr 1fr;}.stp span{display:none;}.bm-row{flex-direction:column;align-items:flex-start;}}
 </style>
 </head>
 <body>
 <canvas id="cvs"></canvas>
 
-<div class="overlay" id="spinOverlay">
-  <div class="spin-label">✨ Sorteando...</div>
-  <div class="roulette-shell">
-    <div class="roulette-header">🎰 Seleccionando ganador</div>
-    <div class="roulette-viewport">
-      <div class="roulette-center"></div>
-      <div class="roulette-list" id="rouletteList"></div>
+<!-- Roulette overlay -->
+<div class="ov" id="ovSpin">
+  <div class="spin-lbl">✨ Sorteando...</div>
+  <div class="rou-shell">
+    <div class="rou-hdr">🎰 Seleccionando ganador</div>
+    <div class="rou-vp">
+      <div class="rou-focus"></div>
+      <div class="rou-list" id="rouList"></div>
     </div>
   </div>
 </div>
 
-<div class="overlay" id="winOverlay">
-  <div class="winner-card">
-    <div class="w-crown">🏆</div>
-    <div class="w-label">¡Ganador del sorteo!</div>
-    <div class="w-name" id="wName">@usuario</div>
-    <div class="w-sub"  id="wSub"></div>
-    <div class="w-actions">
-      <button class="btn btn-grad" onclick="sortearOtro()">Sortear otro ganador</button>
-      <button class="btn btn-outline" onclick="closeWin()">Cerrar</button>
+<!-- Winner overlay -->
+<div class="ov" id="ovWin">
+  <div class="win-card">
+    <div class="win-crown">🏆</div>
+    <div class="win-lbl">¡Ganador del sorteo!</div>
+    <div class="win-name" id="wName">@usuario</div>
+    <div class="win-sub"  id="wSub"></div>
+    <div class="win-acts">
+      <button class="btn btn-main" onclick="sortearOtro()">Sortear otro ganador</button>
+      <button class="btn btn-out"  onclick="closeWin()">Cerrar</button>
     </div>
   </div>
 </div>
 
-<div class="header">
-  <div class="header-logo">🎰 Sorteo<em>IG</em></div>
-  <div class="header-sub">Sorteá comentarios de Instagram automáticamente</div>
-</div>
-
-<div class="container">
-  <div class="steps">
-    <button class="step-btn active" id="s1btn" onclick="goStep(1)"><div class="step-num">1</div><span>Importar</span></button>
-    <button class="step-btn" id="s2btn" onclick="goStep(2)"><div class="step-num">2</div><span>Filtros</span></button>
-    <button class="step-btn" id="s3btn" onclick="goStep(3)"><div class="step-num">3</div><span>Sortear</span></button>
-  </div>
-
-  <!-- ══ STEP 1 ══ -->
-  <div class="section active" id="step1">
-    <div class="card">
-      <div class="card-head"><div class="card-icon">🔖</div><div class="card-title">Bookmarklet de extracción</div></div>
-      <div class="card-desc">Arrastrá el botón a tu barra de favoritos. Luego, en la publicación de Instagram, hacé clic en él para extraer todos los comentarios automáticamente.</div>
-      <div class="bm-box">
-        <div class="bm-label">① Arrastrá este botón a tus favoritos</div>
-        <div class="bm-button-wrap">
-          <a class="bm-drag-btn" id="bookmarkletLink" href="#">📥 Extraer comentarios IG</a>
-          <div class="bm-hint">Arrastrá hacia la barra de favoritos<br>del navegador (o guardalo como favorito)</div>
-        </div>
-      </div>
-      <div class="card-desc" style="margin-bottom:8px;font-weight:600;color:var(--text)">② Cómo usarlo:</div>
-      <ol class="steps-list">
-        <li>Abrí la publicación de Instagram en el navegador</li>
-        <li>Hacé clic en el bookmarklet "Extraer comentarios IG" de tus favoritos</li>
-        <li>Esperá mientras extrae y pagina todos los comentarios (se muestra el progreso)</li>
-        <li>Te redirige acá automáticamente con todos los participantes y sus comentarios cargados</li>
-      </ol>
-    </div>
-
-    <div class="card">
-      <div class="card-head" style="margin-bottom:10px"><div class="card-icon">👥</div><div class="card-title">Participantes</div></div>
-      <div class="loaded-banner" id="loadedBanner">✅ <span id="loadedMsg">Comentarios cargados</span></div>
-      <div class="counter-row" id="counterRow" style="display:none">
-        <div class="counter-cell total"><div class="counter-num" id="cTotal">0</div><div class="counter-lbl">importados</div></div>
-        <div class="counter-cell excl"><div class="counter-num" id="cExcl">0</div><div class="counter-lbl">filtrados</div></div>
-        <div class="counter-cell elig"><div class="counter-num" id="cElig">0</div><div class="counter-lbl">elegibles</div></div>
-      </div>
-      <div class="tags-wrap" id="tagList">
-        <div class="empty"><div class="empty-icon">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div>
-      </div>
-      <div class="row mt-10">
-        <input type="text" id="manualInput" placeholder="@usuario (agregar manualmente)" />
-        <button class="btn btn-outline btn-sm" onclick="addManual()">+ Agregar</button>
-      </div>
-    </div>
-    <button class="btn btn-grad" onclick="goStep(2)">Continuar → Configurar filtros</button>
-  </div>
-
-  <!-- ══ STEP 2 ══ -->
-  <div class="section" id="step2">
-
-    <div class="card">
-      <div class="card-head"><div class="card-icon">📋</div><div class="card-title">Configuración general</div></div>
-      <label>Nombre del sorteo</label>
-      <input type="text" id="sorteoName" placeholder='Ej: "Sorteo Kit Le Sucrée — Junio 2025"' />
-      <div class="mt-14">
-        <label>Cantidad de ganadores</label>
-        <input type="number" id="numWinners" value="1" min="1" max="50" style="width:90px" />
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head" style="margin-bottom:14px"><div class="card-icon">⚙️</div><div class="card-title">Filtros automáticos</div></div>
-      <div style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Activá los filtros que quieras. Se aplican automáticamente al sortear — los que no cumplen quedan excluidos.</div>
-
-      <!-- Filter 1: Min mentions -->
-      <div class="filter-card" id="fc-mentions">
-        <div class="filter-header" onclick="toggleFilter('mentions')">
-          <div class="filter-title">👥 Mínimo de menciones en el comentario
-            <span class="filter-badge" id="fb-mentions">OFF</span>
-          </div>
-          <label class="toggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="ft-mentions" onchange="onFilterToggle('mentions')">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="filter-body" id="fb-body-mentions">
-          <div class="filter-row" style="margin-top:4px">
-            <label>Mínimo de @menciones requeridas:</label>
-            <input type="number" id="fv-mentions" value="1" min="1" max="10" onchange="applyFilters()" />
-          </div>
-          <div style="font-size:12px;color:var(--muted)">Excluye a quienes comentaron sin mencionar suficientes usuarios.</div>
-        </div>
-      </div>
-
-      <!-- Filter 2: Must contain keyword -->
-      <div class="filter-card" id="fc-keyword">
-        <div class="filter-header" onclick="toggleFilter('keyword')">
-          <div class="filter-title">🔤 El comentario debe contener una frase
-            <span class="filter-badge" id="fb-keyword">OFF</span>
-          </div>
-          <label class="toggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="ft-keyword" onchange="onFilterToggle('keyword')">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="filter-body" id="fb-body-keyword">
-          <div class="filter-row" style="margin-top:4px">
-            <input type="text" id="fv-keyword" placeholder='Ej: "Vamos Argentina" o "Le Sucrée"' oninput="applyFilters()" />
-          </div>
-          <div style="font-size:12px;color:var(--muted)">No distingue mayúsculas/minúsculas. Excluye a quienes no incluyeron esa palabra o frase.</div>
-        </div>
-      </div>
-
-      <!-- Filter 3: Min words -->
-      <div class="filter-card" id="fc-words">
-        <div class="filter-header" onclick="toggleFilter('words')">
-          <div class="filter-title">📝 Comentario mínimo de X palabras
-            <span class="filter-badge" id="fb-words">OFF</span>
-          </div>
-          <label class="toggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="ft-words" onchange="onFilterToggle('words')">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="filter-body" id="fb-body-words">
-          <div class="filter-row" style="margin-top:4px">
-            <label>Palabras mínimas:</label>
-            <input type="number" id="fv-words" value="2" min="1" max="50" onchange="applyFilters()" />
-          </div>
-          <div style="font-size:12px;color:var(--muted)">Filtra comentarios que son solo emojis o una palabra suelta.</div>
-        </div>
-      </div>
-
-      <!-- Filter 4: No bots -->
-      <div class="filter-card" id="fc-bots">
-        <div class="filter-header" onclick="toggleFilter('bots')">
-          <div class="filter-title">🤖 Filtrar posibles bots/cuentas falsas
-            <span class="filter-badge" id="fb-bots">OFF</span>
-          </div>
-          <label class="toggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="ft-bots" onchange="onFilterToggle('bots')">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="filter-body" id="fb-body-bots">
-          <div style="margin-top:4px;font-size:12px;color:var(--muted);line-height:1.6">Excluye usernames que parecen generados automáticamente: más de 5 números consecutivos, patrones como "user123456789", o menos de 3 caracteres totales.</div>
-        </div>
-      </div>
-
-      <!-- Filter 5: No replies -->
-      <div class="filter-card" id="fc-replies">
-        <div class="filter-header" onclick="toggleFilter('replies')">
-          <div class="filter-title">💬 Solo comentarios principales (sin replies)
-            <span class="filter-badge" id="fb-replies">OFF</span>
-          </div>
-          <label class="toggle" onclick="event.stopPropagation()">
-            <input type="checkbox" id="ft-replies" onchange="onFilterToggle('replies')">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div class="filter-body" id="fb-body-replies">
-          <div style="margin-top:4px;font-size:12px;color:var(--muted);line-height:1.6">Excluye respuestas a otros comentarios. Solo participan quienes comentaron directamente en la publicación.</div>
-        </div>
-      </div>
-
-      <div id="filterSummaryWrap" style="display:none;margin-top:12px">
-        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">Filtros activos:</div>
-        <div class="filter-summary" id="filterSummary"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head"><div class="card-icon">📌</div><div class="card-title">Requisitos visuales (recordatorio)</div></div>
-      <div class="card-desc">Para requisitos que no se pueden verificar automáticamente (seguir la cuenta, compartir en historias, etc.).</div>
-      <div class="row">
-        <input type="text" id="reqInput" placeholder='Ej: "Seguir la cuenta" o "Compartir en historias"' />
-        <button class="btn btn-outline btn-sm" onclick="addReq()">+ Agregar</button>
-      </div>
-      <div class="tags-wrap mt-10" id="reqPills">
-        <div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head"><div class="card-icon">🚫</div><div class="card-title">Excluir manualmente</div></div>
-      <div class="card-desc">Tocá un participante para excluirlo individualmente. Los <span style="background:#fef9c3;border:1px solid #fde047;padding:1px 6px;border-radius:4px;font-size:11px">amarillos</span> fueron excluidos por un filtro automático.</div>
-      <div class="tags-wrap" id="excludeList">
-        <div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>
-      </div>
-    </div>
-
-    <div class="row">
-      <button class="btn btn-outline" style="flex:1" onclick="goStep(1)">← Volver</button>
-      <button class="btn btn-grad"    style="flex:2" onclick="goStep(3)">Continuar → Sortear</button>
-    </div>
-  </div>
-
-  <!-- ══ STEP 3 ══ -->
-  <div class="section" id="step3">
-    <div class="card" id="summaryCard"></div>
-    <div class="card" id="histCard" style="display:none">
-      <div class="card-head" style="margin-bottom:10px"><div class="card-icon">🏅</div><div class="card-title">Ganadores</div></div>
-      <div id="histList"></div>
-    </div>
-    <button class="btn btn-grad" id="sortearBtn" onclick="iniciarSorteo()">🎰 ¡Sortear!</button>
-    <div class="row mt-10">
-      <button class="btn btn-outline" style="flex:1" onclick="goStep(2)">← Volver</button>
-      <button class="btn btn-danger"  style="flex:1" onclick="resetAll()">🔄 Nuevo sorteo</button>
-    </div>
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-logo">🎰 Sorteo<em>IG</em></div>
+  <div class="hdr-sub">Sorteá comentarios de Instagram — rápido, justo y sin trampa</div>
+  <div class="steps-bar">
+    <button class="stp active" id="s1" onclick="go(1)"><div class="stp-n">1</div><span>Importar</span></button>
+    <button class="stp"        id="s2" onclick="go(2)"><div class="stp-n">2</div><span>Filtros</span></button>
+    <button class="stp"        id="s3" onclick="go(3)"><div class="stp-n">3</div><span>Sortear</span></button>
   </div>
 </div>
+
+<div class="page">
+
+<!-- ══════ STEP 1 ══════ -->
+<div class="section active" id="p1">
+
+  <div class="card">
+    <div class="card-hd"><div class="card-ico">🔖</div><div class="card-ttl">Bookmarklet de extracción</div></div>
+    <div class="card-desc">Arrastrá el botón a tu barra de favoritos. Luego, en la publicación de Instagram, hacé clic en él para extraer <strong>todos</strong> los comentarios con sus textos.</div>
+    <div class="bm-shell">
+      <div class="bm-lbl">① Arrastrá este botón a tus favoritos</div>
+      <div class="bm-row">
+        <a class="bm-btn" id="bmLink" href="#">📥 Extraer comentarios IG</a>
+        <div class="bm-hint">Arrastrá a la barra de favoritos<br>del navegador y listo.</div>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;margin-bottom:6px;">② Cómo usarlo:</div>
+    <ol class="how-list">
+      <li>Abrí la publicación de Instagram en Chrome o Edge</li>
+      <li>Hacé clic en el favorito "Extraer comentarios IG"</li>
+      <li>Esperá el progreso en pantalla (extrae y pagina automáticamente)</li>
+      <li>Cuando termina, te abre la app acá con todo cargado</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-hd" style="margin-bottom:8px"><div class="card-ico">👥</div><div class="card-ttl">Participantes cargados</div></div>
+    <div class="banner" id="banner">✅ <span id="bannerMsg"></span></div>
+    <div class="cnt-grid" id="cntGrid" style="display:none">
+      <div class="cnt-cell tot"><div class="cnt-n" id="cTot">0</div><div class="cnt-l">importados</div></div>
+      <div class="cnt-cell exc"><div class="cnt-n"  id="cExc">0</div><div class="cnt-l">filtrados</div></div>
+      <div class="cnt-cell elig"><div class="cnt-n" id="cEl">0</div><div class="cnt-l">elegibles</div></div>
+    </div>
+    <div class="tags" id="tagList"><div class="empty"><div class="empty-ico">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div></div>
+    <div class="flex-row mt8">
+      <input type="text" id="manIn" placeholder="@usuario (agregar manualmente)" />
+      <button class="btn btn-out btn-sm" onclick="addManual()">+ Agregar</button>
+    </div>
+  </div>
+
+  <button class="btn btn-main" onclick="go(2)">Continuar → Configurar filtros</button>
+</div>
+
+<!-- ══════ STEP 2 ══════ -->
+<div class="section" id="p2">
+
+  <div class="card">
+    <div class="card-hd"><div class="card-ico">📋</div><div class="card-ttl">Configuración general</div></div>
+    <label>Nombre del sorteo</label>
+    <input type="text" id="sName" placeholder='Ej: "Sorteo Kit Le Sucrée — Junio 2025"' />
+    <div class="mt12">
+      <label>Cantidad de ganadores</label>
+      <input type="number" id="nWin" value="1" min="1" max="50" style="width:80px" />
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd" style="margin-bottom:10px"><div class="card-ico">⚙️</div><div class="card-ttl">Filtros automáticos</div></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Activá los filtros que quieras. Se verifican sobre el <strong>texto real del comentario</strong> extraído.</div>
+
+    <!-- F1 mentions -->
+    <div class="fc" id="fc-m">
+      <div class="fc-hd">
+        <div class="fc-title">👥 Mínimo de menciones <span class="fc-badge off" id="fb-m">OFF</span></div>
+        <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="ft-m" onchange="fToggle('m')"><span class="tog-sl"></span></label>
+      </div>
+      <div class="fc-body" id="fb-body-m">
+        <div class="fc-row mt8">
+          <label>Mínimo de @menciones requeridas:</label>
+          <input type="number" id="fv-m" value="2" min="1" max="10" oninput="applyFilters()" />
+        </div>
+        <div class="fc-hint">Detectado en el texto real del comentario. Excluye a quienes no mencionaron suficientes usuarios.</div>
+      </div>
+    </div>
+
+    <!-- F2 keyword -->
+    <div class="fc" id="fc-k">
+      <div class="fc-hd">
+        <div class="fc-title">🔤 Debe contener una frase <span class="fc-badge off" id="fb-k">OFF</span></div>
+        <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="ft-k" onchange="fToggle('k')"><span class="tog-sl"></span></label>
+      </div>
+      <div class="fc-body" id="fb-body-k">
+        <div class="fc-row mt8">
+          <input type="text" id="fv-k" placeholder='Ej: "Vamos Argentina" o "Le Sucrée"' oninput="applyFilters()" />
+        </div>
+        <div class="fc-hint">Sin distinguir mayúsculas. Excluye quien no incluyó esa palabra o frase exacta en su comentario.</div>
+      </div>
+    </div>
+
+    <!-- F3 words -->
+    <div class="fc" id="fc-w">
+      <div class="fc-hd">
+        <div class="fc-title">📝 Mínimo de palabras <span class="fc-badge off" id="fb-w">OFF</span></div>
+        <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="ft-w" onchange="fToggle('w')"><span class="tog-sl"></span></label>
+      </div>
+      <div class="fc-body" id="fb-body-w">
+        <div class="fc-row mt8">
+          <label>Mínimo de palabras (sin contar @menciones):</label>
+          <input type="number" id="fv-w" value="2" min="1" max="30" oninput="applyFilters()" />
+        </div>
+        <div class="fc-hint">Filtra comentarios que son solo emojis, una sola palabra o solo menciones.</div>
+      </div>
+    </div>
+
+    <!-- F4 bots -->
+    <div class="fc" id="fc-b">
+      <div class="fc-hd">
+        <div class="fc-title">🤖 Filtrar posibles bots <span class="fc-badge off" id="fb-b">OFF</span></div>
+        <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="ft-b" onchange="fToggle('b')"><span class="tog-sl"></span></label>
+      </div>
+      <div class="fc-body" id="fb-body-b">
+        <div class="fc-hint mt8">Excluye usernames con 6+ dígitos consecutivos, patrón "user123456789", o más del 60% de su nombre compuesto por números.</div>
+      </div>
+    </div>
+
+    <!-- F5 replies -->
+    <div class="fc" id="fc-r">
+      <div class="fc-hd">
+        <div class="fc-title">💬 Solo comentarios principales <span class="fc-badge off" id="fb-r">OFF</span></div>
+        <label class="tog" onclick="event.stopPropagation()"><input type="checkbox" id="ft-r" onchange="fToggle('r')"><span class="tog-sl"></span></label>
+      </div>
+      <div class="fc-body" id="fb-body-r">
+        <div class="fc-hint mt8">Excluye respuestas a otros comentarios. Solo participan quienes comentaron directamente en la publicación.</div>
+      </div>
+    </div>
+
+    <div id="fSumWrap" style="display:none;margin-top:10px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px">Filtros activos:</div>
+      <div class="f-sum" id="fSum"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-ico">📌</div><div class="card-ttl">Requisitos visuales</div></div>
+    <div class="card-desc">Para requisitos no verificables automáticamente (seguir la cuenta, compartir en historias, etc.).</div>
+    <div class="flex-row">
+      <input type="text" id="reqIn" placeholder='Ej: "Seguir la cuenta"' />
+      <button class="btn btn-out btn-sm" onclick="addReq()">+ Agregar</button>
+    </div>
+    <div class="tags mt8" id="reqPills"><div style="font-size:11px;color:var(--muted2);font-style:italic">Sin requisitos visuales</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-ico">🚫</div><div class="card-ttl">Excluir manualmente</div></div>
+    <div class="card-desc">Tocá cualquier participante para excluirlo. <span style="background:#fef9c3;border:1px solid #fde047;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700">Amarillos</span> = excluidos por filtro automático (con el motivo). Tocá para ver y reincluir.</div>
+    <div class="tags" id="exList"><div class="empty"><div class="empty-ico">✅</div>No hay participantes</div></div>
+  </div>
+
+  <div class="flex-row">
+    <button class="btn btn-out"  style="flex:1" onclick="go(1)">← Volver</button>
+    <button class="btn btn-main" style="flex:2" onclick="go(3)">Continuar → Sortear</button>
+  </div>
+</div>
+
+<!-- ══════ STEP 3 ══════ -->
+<div class="section" id="p3">
+  <div class="card" id="sumCard"></div>
+  <div class="card" id="histCard" style="display:none">
+    <div class="card-hd" style="margin-bottom:8px"><div class="card-ico">🏅</div><div class="card-ttl">Ganadores</div></div>
+    <div id="histList"></div>
+  </div>
+  <button class="btn btn-main" id="sortBtn" onclick="doSorteo()">🎰 ¡Sortear!</button>
+  <div class="flex-row mt8">
+    <button class="btn btn-out" style="flex:1" onclick="go(2)">← Volver</button>
+    <button class="btn btn-red" style="flex:1" onclick="resetAll()">🔄 Nuevo sorteo</button>
+  </div>
+</div>
+
+</div><!-- /page -->
 
 <script>
-// ── State ──
-// participants: { '@user': { excluded: bool, autoExcluded: bool, count: int, text: string, isReply: bool } }
-let participants = {};
-let winners      = [];
-let requisitos   = [];
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+// p[u] = { count, text, isReply, manExcluded, autoExcluded, autoReason }
+let P = {}, W = [], reqs = [];
 
-// ── Build bookmarklet ──
-(function buildBookmarklet() {
-  const appUrl = window.location.origin;
-  const script = `(async function(){
-    const MAX_PAGES = 80;
-    const delay = ms => new Promise(r => setTimeout(r, ms));
-    function shortcode() {
-      const m = location.pathname.match(/\\/(?:p|reel|tv)\\/([A-Za-z0-9_-]+)/);
-      return m ? m[1] : null;
-    }
-    const sc = shortcode();
-    if (!sc) { alert('Abrí una publicación de Instagram primero.'); return; }
+// ══════════════════════════════════════════
+// BOOKMARKLET — uses localStorage to avoid URL length limits
+// ══════════════════════════════════════════
+(function buildBM(){
+  const APP = window.location.origin + window.location.pathname.replace(/\/[^/]*$/,'/');
+  const code = `(async()=>{
+  const MAXP=80, DL=ms=>new Promise(r=>setTimeout(r,ms));
+  const sc=(()=>{const m=location.pathname.match(/\\/(?:p|reel|tv)\\/([A-Za-z0-9_-]+)/);return m?m[1]:null;})();
+  if(!sc){alert('Abrí una publicación de Instagram primero.');return;}
 
-    const pageRes = await fetch('/api/v1/media/' + sc + '/info/', {
-      credentials:'include', headers:{'X-IG-App-ID':'936619743392459'}
+  // Get mediaId
+  let mid;
+  try{const r=await fetch('/api/v1/media/'+sc+'/info/',{credentials:'include',headers:{'X-IG-App-ID':'936619743392459'}});
+    if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.items?.[0]?.id;}}catch(e){}
+  if(!mid){const m=document.documentElement.innerHTML.match(/"media_id":"(\\d+)"/);if(m)mid=m[1];}
+  if(!mid){try{const r=await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.graphql?.shortcode_media?.id;}}catch(e){}}
+  if(!mid){alert('No se pudo obtener el ID. Recargá la página de Instagram e intentá de nuevo.');return;}
+
+  const T=document.createElement('div');
+  T.style.cssText='position:fixed;top:16px;right:16px;z-index:2147483647;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;padding:13px 18px;border-radius:12px;font-family:-apple-system,sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.35);min-width:230px;text-align:center;line-height:1.4;';
+  T.textContent='⏳ Conectando...';
+  document.body.appendChild(T);
+
+  // Map: lower(username) -> { count, text (last top-level comment), isReply }
+  const U=new Map();
+  let total=0;
+
+  function addComment(c,isReply){
+    const u=c?.user?.username;if(!u)return;
+    const k=u.toLowerCase();
+    const ex=U.get(k)||{count:0,text:'',isReply:true};
+    U.set(k,{
+      count:ex.count+1,
+      // keep the longest text (most mentions likely)
+      text:(c.text||'').length>(ex.text||'').length?(c.text||''):ex.text,
+      isReply:ex.count===0?isReply:ex.isReply // first comment determines type
     });
-    let mediaId;
-    if (pageRes.ok) { const d = await pageRes.json(); mediaId = d?.items?.[0]?.pk || d?.items?.[0]?.id; }
-    if (!mediaId) {
-      const m = document.documentElement.innerHTML.match(/"media_id":"(\\d+)"/);
-      if (m) mediaId = m[1];
-    }
-    if (!mediaId) {
-      const gRes = await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});
-      if (gRes.ok) { try { const g=await gRes.json(); mediaId=g?.items?.[0]?.pk||g?.graphql?.shortcode_media?.id; } catch(e){} }
-    }
-    if (!mediaId) { alert('No se pudo obtener el ID de la publicación. Recargá la página de Instagram e intentá de nuevo.'); return; }
+  }
 
-    const toast = document.createElement('div');
-    toast.style.cssText='position:fixed;top:20px;right:20px;z-index:99999;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:white;padding:14px 20px;border-radius:12px;font-family:sans-serif;font-size:14px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.3);min-width:240px;text-align:center;transition:opacity .3s';
-    toast.textContent='⏳ Conectando con Instagram...';
-    document.body.appendChild(toast);
+  async function fp(extra){
+    let url='/api/v1/media/'+mid+'/comments/?can_support_threading=true&permalink_enabled=false';
+    if(extra)url+='&'+extra;
+    try{const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
+      if(!r.ok)return null;return r.json();}catch(e){return null;}
+  }
 
-    // Map: username -> { count, text (last comment), isReply }
-    const users = new Map();
-    let total = 0;
+  const first=await fp(null);
+  if(!first){T.textContent='❌ No se pudo acceder. ¿Publicación pública?';setTimeout(()=>T.remove(),3000);return;}
+  total=first?.comment_count||0;
+  (first?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
+  T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
 
-    function processComment(c, isReply) {
-      const u = c?.user?.username;
-      if (!u) return;
-      const key = u.toLowerCase();
-      const existing = users.get(key);
-      users.set(key, {
-        count: (existing?.count||0)+1,
-        text: c.text || '',
-        isReply: isReply && !(existing?.count)  // mark as reply only if first occurrence is a reply
-      });
-    }
+  let minId=first?.next_min_id,pb=0;
+  while(minId&&pb<MAXP){await DL(280);const d=await fp('min_id='+minId);if(!d)break;
+    (d?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
+    T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
+    const nx=d?.next_min_id;if(!nx||(d?.comments||[]).length===0)break;minId=nx;pb++;}
 
-    async function fetchPage(extraParam) {
-      let url='/api/v1/media/'+mediaId+'/comments/?can_support_threading=true&permalink_enabled=false';
-      if (extraParam) url+='&'+extraParam;
-      const res=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
-      if (!res.ok) return null;
-      return res.json();
-    }
+  let maxId=first?.next_max_id,pf=0;
+  while(maxId&&pf<MAXP){await DL(280);const d=await fp('max_id='+maxId);if(!d)break;
+    (d?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
+    T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
+    const nx=d?.next_max_id;if(!nx||(d?.comments||[]).length===0)break;maxId=nx;pf++;}
 
-    const first = await fetchPage(null);
-    if (!first) { toast.textContent='❌ No se pudo acceder a los comentarios'; setTimeout(()=>toast.remove(),3000); return; }
+  if(U.size===0){T.textContent='❌ No se encontraron comentarios';setTimeout(()=>T.remove(),3000);return;}
+  T.textContent='✅ '+U.size+' participantes. Abriendo app...';
 
-    total = first?.comment_count || 0;
-    (first?.comments||[]).forEach(c => {
-      processComment(c, false);
-      // also grab top-level preview replies
-      (c?.preview_child_comments||[]).forEach(r => processComment(r, true));
-    });
-    toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
-
-    // Paginate backwards
-    let minId=first?.next_min_id, pageB=0;
-    while(minId && pageB<MAX_PAGES){
-      await delay(280);
-      const data=await fetchPage('min_id='+minId);
-      if(!data) break;
-      (data?.comments||[]).forEach(c=>{
-        processComment(c,false);
-        (c?.preview_child_comments||[]).forEach(r=>processComment(r,true));
-      });
-      toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
-      const next=data?.next_min_id;
-      if(!next||(data?.comments||[]).length===0) break;
-      minId=next; pageB++;
-    }
-
-    // Paginate forwards
-    let maxId=first?.next_max_id, pageF=0;
-    while(maxId && pageF<MAX_PAGES){
-      await delay(280);
-      const data=await fetchPage('max_id='+maxId);
-      if(!data) break;
-      (data?.comments||[]).forEach(c=>{
-        processComment(c,false);
-        (c?.preview_child_comments||[]).forEach(r=>processComment(r,true));
-      });
-      toast.textContent='⏳ Extrayendo... '+users.size+'/'+total;
-      const next=data?.next_max_id;
-      if(!next||(data?.comments||[]).length===0) break;
-      maxId=next; pageF++;
-    }
-
-    if(users.size===0){toast.textContent='❌ No se encontraron comentarios';setTimeout(()=>toast.remove(),3000);return;}
-    toast.textContent='✅ '+users.size+' participantes encontrados. Abriendo app...';
-
-    const usersObj={};
-    users.forEach((v,k)=>{ usersObj[k]={count:v.count,text:v.text,isReply:v.isReply}; });
-    const payload=JSON.stringify({users:usersObj,total});
-    const encoded=encodeURIComponent(payload);
-    setTimeout(()=>{ window.open('${appUrl}/?data='+encoded,'_blank'); toast.remove(); },900);
-  })();`;
-
-  document.getElementById('bookmarkletLink').href = 'javascript:' + encodeURIComponent(script);
+  // Store in localStorage to avoid URL length limits
+  const payload={users:Object.fromEntries(U),total,ts:Date.now()};
+  try{localStorage.setItem('sorteoig_data',JSON.stringify(payload));}catch(e){T.textContent='❌ Error de almacenamiento';setTimeout(()=>T.remove(),3000);return;}
+  setTimeout(()=>{window.open('${APP}?from=bm','_blank');T.remove();},900);
+})();`;
+  document.getElementById('bmLink').href='javascript:'+encodeURIComponent(code);
 })();
 
-// ── Read URL data ──
-(function readUrlData(){
-  const raw = new URLSearchParams(window.location.search).get('data');
-  if(!raw) return;
-  try {
-    const data = JSON.parse(decodeURIComponent(raw));
-    if(data.users && typeof data.users==='object'){
-      participants={};
-      Object.entries(data.users).forEach(([u,v])=>{
-        const info = typeof v==='object' ? v : {count:v,text:'',isReply:false};
-        participants['@'+u]={excluded:false,autoExcluded:false,count:info.count,text:info.text||'',isReply:!!info.isReply};
-      });
-      const total=data.total||Object.keys(participants).length;
-      document.getElementById('loadedBanner').classList.add('show');
-      document.getElementById('loadedMsg').textContent=Object.keys(participants).length+' participantes únicos cargados ('+total+' comentarios totales)';
-      renderTags();
-      window.history.replaceState({},'',window.location.pathname);
-    }
-  } catch(e){ console.error(e); }
+// ══════════════════════════════════════════
+// READ DATA from localStorage
+// ══════════════════════════════════════════
+(function readData(){
+  const fromBm=new URLSearchParams(location.search).get('from')==='bm';
+  if(!fromBm)return;
+  window.history.replaceState({},'',location.pathname);
+  try{
+    const raw=localStorage.getItem('sorteoig_data');
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(!d.users)return;
+    // Check freshness (10 min)
+    if(Date.now()-d.ts>10*60*1000){localStorage.removeItem('sorteoig_data');return;}
+    P={};
+    Object.entries(d.users).forEach(([u,v])=>{
+      P['@'+u]={count:v.count||1,text:v.text||'',isReply:!!v.isReply,manExcluded:false,autoExcluded:false,autoReason:''};
+    });
+    const total=d.total||Object.keys(P).length;
+    document.getElementById('banner').classList.add('show');
+    document.getElementById('bannerMsg').textContent=Object.keys(P).length+' participantes únicos cargados ('+total+' comentarios totales)';
+    localStorage.removeItem('sorteoig_data');
+    renderTags();
+  }catch(e){console.error('readData error',e);}
 })();
 
-// ── Filter logic ──
-function getFilterConfig(){
-  return {
-    mentions: { on: document.getElementById('ft-mentions').checked, val: parseInt(document.getElementById('fv-mentions').value)||1 },
-    keyword:  { on: document.getElementById('ft-keyword').checked,  val: document.getElementById('fv-keyword').value.trim().toLowerCase() },
-    words:    { on: document.getElementById('ft-words').checked,    val: parseInt(document.getElementById('fv-words').value)||2 },
-    bots:     { on: document.getElementById('ft-bots').checked },
-    replies:  { on: document.getElementById('ft-replies').checked },
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function go(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('p'+i).classList.toggle('active',i===n);
+    const b=document.getElementById('s'+i);
+    b.classList.toggle('active',i===n);
+    b.classList.toggle('done',i<n);
+  });
+  if(n===2){applyFilters();renderExList();}
+  if(n===3) renderSummary();
+}
+
+// ══════════════════════════════════════════
+// FILTER ENGINE
+// ══════════════════════════════════════════
+function cfg(){
+  return{
+    m:{on:document.getElementById('ft-m').checked, val:parseInt(document.getElementById('fv-m').value)||1},
+    k:{on:document.getElementById('ft-k').checked, val:document.getElementById('fv-k').value.trim().toLowerCase()},
+    w:{on:document.getElementById('ft-w').checked, val:parseInt(document.getElementById('fv-w').value)||2},
+    b:{on:document.getElementById('ft-b').checked},
+    r:{on:document.getElementById('ft-r').checked},
   };
 }
 
-function isBotUsername(u){
-  const name=u.replace('@','');
-  if(name.length<3) return true;
-  if(/\d{6,}/.test(name)) return true; // 6+ consecutive digits
-  if(/^user\d{5,}/i.test(name)) return true;
-  if((name.match(/\d/g)||[]).length / name.length > 0.6 && name.length>6) return true; // >60% digits
-  return false;
-}
+function countMentions(t){return(t.match(/@[a-zA-Z0-9._]{1,30}/g)||[]).length;}
+function countWords(t){return t.replace(/@\S+/g,'').replace(/[\u{1F300}-\u{1FFFF}\u2600-\u27BF]/gu,'').trim().split(/\s+/).filter(w=>w.length>0).length;}
+function isBot(u){const n=u.replace('@','');if(n.length<3)return true;if(/\d{6,}/.test(n))return true;if(/^user\d{5,}/i.test(n))return true;if((n.match(/\d/g)||[]).length/n.length>.6&&n.length>5)return true;return false;}
 
-function countMentions(text){
-  return (text.match(/@[a-zA-Z0-9._]{1,30}/g)||[]).length;
-}
-
-function countWords(text){
-  // strip mentions and emojis for word count
-  const clean=text.replace(/@\S+/g,'').replace(/[\u{1F300}-\u{1FFFF}]/gu,'').trim();
-  return clean.split(/\s+/).filter(w=>w.length>0).length;
-}
-
-function shouldAutoExclude(u, p, cfg){
-  if(cfg.bots.on    && isBotUsername(u))                              return '🤖 Posible bot';
-  if(cfg.replies.on && p.isReply)                                     return '💬 Es reply';
-  if(cfg.mentions.on && countMentions(p.text) < cfg.mentions.val)     return '👥 Pocas menciones ('+countMentions(p.text)+'/'+cfg.mentions.val+')';
-  if(cfg.keyword.on  && cfg.keyword.val && !p.text.toLowerCase().includes(cfg.keyword.val)) return '🔤 Sin la frase';
-  if(cfg.words.on    && countWords(p.text) < cfg.words.val)           return '📝 Comentario muy corto';
+function checkFilters(u,p,c){
+  if(c.b.on && isBot(u))                                    return'🤖 Posible bot';
+  if(c.r.on && p.isReply)                                   return'💬 Es reply';
+  if(c.m.on && countMentions(p.text)<c.m.val)               return'👥 Pocas menciones ('+countMentions(p.text)+'/'+c.m.val+')';
+  if(c.k.on && c.k.val && !p.text.toLowerCase().includes(c.k.val)) return'🔤 Sin la frase requerida';
+  if(c.w.on && countWords(p.text)<c.w.val)                  return'📝 Comentario muy corto ('+countWords(p.text)+' palabras)';
   return null;
 }
 
 function applyFilters(){
-  const cfg=getFilterConfig();
-  Object.keys(participants).forEach(u=>{
-    const p=participants[u];
-    if(!p.excluded){ // only auto-manage if not manually excluded
-      const reason=shouldAutoExclude(u,p,cfg);
-      p.autoExcluded=!!reason;
-      p.autoReason=reason||'';
+  const c=cfg();
+  Object.keys(P).forEach(u=>{
+    const p=P[u];
+    if(!p.manExcluded){
+      const r=checkFilters(u,p,c);
+      p.autoExcluded=!!r; p.autoReason=r||'';
     }
   });
   renderTags();
-  renderExcludeList();
-  updateFilterSummary(cfg);
+  renderFSummary(c);
 }
 
-function updateFilterSummary(cfg){
-  const wrap=document.getElementById('filterSummaryWrap');
-  const cont=document.getElementById('filterSummary');
+function renderFSummary(c){
   const active=[];
-  if(cfg.mentions.on) active.push('👥 Mín. '+cfg.mentions.val+' menciones');
-  if(cfg.keyword.on && cfg.keyword.val)  active.push('🔤 Contiene "'+cfg.keyword.val+'"');
-  if(cfg.words.on)    active.push('📝 Mín. '+cfg.words.val+' palabras');
-  if(cfg.bots.on)     active.push('🤖 Sin bots');
-  if(cfg.replies.on)  active.push('💬 Sin replies');
+  if(c.m.on) active.push('👥 Mín. '+c.m.val+' menciones');
+  if(c.k.on&&c.k.val) active.push('🔤 "'+c.k.val+'"');
+  if(c.w.on) active.push('📝 Mín. '+c.w.val+' palabras');
+  if(c.b.on) active.push('🤖 Sin bots');
+  if(c.r.on) active.push('💬 Sin replies');
+  const wrap=document.getElementById('fSumWrap');
+  const cont=document.getElementById('fSum');
   wrap.style.display=active.length?'block':'none';
-  cont.innerHTML=active.map(a=>'<div class="fsummary-pill">'+a+'</div>').join('');
+  cont.innerHTML=active.map(a=>'<div class="f-pill">'+a+'</div>').join('');
 }
 
-function toggleFilter(name){
-  const body=document.getElementById('fb-body-'+name);
-  body.classList.toggle('open');
-}
-
-function onFilterToggle(name){
-  const on=document.getElementById('ft-'+name).checked;
-  const badge=document.getElementById('fb-'+name);
-  const card=document.getElementById('fc-'+name);
-  badge.textContent=on?'ON':'OFF';
-  badge.classList.toggle('on',on);
-  card.classList.toggle('active-filter',on);
-  if(on) document.getElementById('fb-body-'+name).classList.add('open');
+function fToggle(id){
+  const on=document.getElementById('ft-'+id).checked;
+  const badge=document.getElementById('fb-'+id);
+  badge.textContent=on?'ON':'OFF'; badge.className='fc-badge '+(on?'on':'off');
+  document.getElementById('fc-'+id).classList.toggle('on',on);
+  document.getElementById('fb-body-'+id).classList.toggle('open',on);
   applyFilters();
 }
 
-// ── Navigation ──
-function goStep(n){
-  [1,2,3].forEach(i=>{
-    document.getElementById('step'+i).classList.toggle('active',i===n);
-    const btn=document.getElementById('s'+i+'btn');
-    btn.classList.toggle('active',i===n);
-    btn.classList.toggle('done',i<n);
-  });
-  if(n===2){ applyFilters(); renderExcludeList(); }
-  if(n===3) renderSummary();
-}
-
-// ── Tags ──
+// ══════════════════════════════════════════
+// RENDER TAGS (step 1 overview)
+// ══════════════════════════════════════════
 function renderTags(){
-  const wrap=document.getElementById('tagList');
-  const keys=Object.keys(participants);
-  const excl=keys.filter(k=>participants[k].excluded||participants[k].autoExcluded).length;
+  const keys=Object.keys(P);
+  const excl=keys.filter(k=>P[k].manExcluded||P[k].autoExcluded).length;
   const elig=keys.length-excl;
-  document.getElementById('counterRow').style.display=keys.length?'grid':'none';
-  document.getElementById('cTotal').textContent=keys.length;
-  document.getElementById('cExcl').textContent=excl;
-  document.getElementById('cElig').textContent=elig;
-  if(!keys.length){
-    wrap.innerHTML='<div class="empty"><div class="empty-icon">👆</div>Usá el bookmarklet en Instagram para cargar participantes</div>';
-    return;
-  }
+  const cg=document.getElementById('cntGrid');
+  cg.style.display=keys.length?'grid':'none';
+  document.getElementById('cTot').textContent=keys.length;
+  document.getElementById('cExc').textContent=excl;
+  document.getElementById('cEl').textContent=elig;
+  const wrap=document.getElementById('tagList');
+  if(!keys.length){wrap.innerHTML='<div class="empty"><div class="empty-ico">👆</div>Usá el bookmarklet en Instagram</div>';return;}
   wrap.innerHTML='';
-  keys.sort().forEach(u=>{
-    const p=participants[u];
-    const isEx=p.excluded||p.autoExcluded;
-    const tag=document.createElement('div');
-    tag.className='tag'+(p.excluded?' excluded':p.autoExcluded?' auto-excluded':'');
-    tag.title=p.autoExcluded?('Filtrado: '+p.autoReason):(p.excluded?'Excluido manualmente':'');
-    tag.innerHTML=u+(p.count>1?' ×'+p.count:'')+'<span class="tag-x">✕</span>';
-    tag.onclick=()=>{ delete participants[u]; renderTags(); };
-    wrap.appendChild(tag);
+  [...keys].sort().forEach(u=>{
+    const p=P[u]; const t=document.createElement('div');
+    const cls=p.manExcluded?'man-ex':p.autoExcluded?'auto-ex':'ok';
+    t.className='tag '+cls;
+    t.title=p.autoExcluded?'Filtrado: '+p.autoReason:p.manExcluded?'Excluido manualmente':'Clic para eliminar';
+    t.innerHTML=u+(p.count>1?' ×'+p.count:'')+'<span class="tag-x">✕</span>';
+    t.onclick=()=>{delete P[u];applyFilters();};
+    wrap.appendChild(t);
   });
 }
 
 function addManual(){
-  let v=document.getElementById('manualInput').value.trim();
-  if(!v) return;
-  if(!v.startsWith('@')) v='@'+v;
-  v=v.toLowerCase();
-  participants[v]=participants[v]||{excluded:false,autoExcluded:false,count:1,text:'',isReply:false};
-  document.getElementById('manualInput').value='';
-  renderTags();
+  let v=document.getElementById('manIn').value.trim();
+  if(!v)return;if(!v.startsWith('@'))v='@'+v;v=v.toLowerCase();
+  P[v]=P[v]||{count:1,text:'',isReply:false,manExcluded:false,autoExcluded:false,autoReason:''};
+  document.getElementById('manIn').value='';applyFilters();
 }
 
-// ── Requisitos ──
-function addReq(){
-  const v=document.getElementById('reqInput').value.trim();
-  if(!v) return;
-  requisitos.push(v);
-  document.getElementById('reqInput').value='';
-  renderReqs();
+// ══════════════════════════════════════════
+// EXCLUDE LIST (step 2)
+// ══════════════════════════════════════════
+function renderExList(){
+  const c=document.getElementById('exList');
+  const keys=Object.keys(P);
+  if(!keys.length){c.innerHTML='<div class="empty"><div class="empty-ico">✅</div>No hay participantes</div>';return;}
+  c.innerHTML='';
+  [...keys].sort().forEach(u=>{
+    const p=P[u];
+    const t=document.createElement('div');
+    const cls=p.manExcluded?'man-ex':p.autoExcluded?'auto-ex':'ok';
+    t.className='tag '+cls;
+    const icon=p.autoExcluded?'🟡 ':p.manExcluded?'🚫 ':'';
+    const detail=p.autoExcluded?' <span style="opacity:.7;font-size:10px">('+p.autoReason+')</span>':'';
+    t.innerHTML=icon+u+detail+'<span class="tag-x">'+(p.manExcluded||p.autoExcluded?'↩':'✕')+'</span>';
+    t.title=p.autoExcluded?p.autoReason:p.manExcluded?'Clic para reincluir':'Clic para excluir';
+    t.onclick=()=>{
+      if(p.autoExcluded&&!p.manExcluded){p.autoExcluded=false;p.autoReason='(reincluido manualmente)';}
+      else{p.manExcluded=!p.manExcluded;}
+      renderExList();renderTags();
+    };
+    c.appendChild(t);
+  });
 }
-function removeReq(i){ requisitos.splice(i,1); renderReqs(); }
+
+// ══════════════════════════════════════════
+// REQUISITOS
+// ══════════════════════════════════════════
+function addReq(){
+  const v=document.getElementById('reqIn').value.trim();if(!v)return;
+  reqs.push(v);document.getElementById('reqIn').value='';renderReqs();
+}
+function removeReq(i){reqs.splice(i,1);renderReqs();}
 function renderReqs(){
   const c=document.getElementById('reqPills');
-  if(!requisitos.length){ c.innerHTML='<div style="font-size:12px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>'; return; }
+  if(!reqs.length){c.innerHTML='<div style="font-size:11px;color:var(--muted2);font-style:italic">Sin requisitos visuales</div>';return;}
   c.innerHTML='';
-  requisitos.forEach((r,i)=>{
-    const d=document.createElement('div'); d.className='req-pill';
-    d.innerHTML=r+' <span class="req-x" onclick="removeReq('+i+')">✕</span>';
-    c.appendChild(d);
-  });
+  reqs.forEach((r,i)=>{const d=document.createElement('div');d.className='req-pill';d.innerHTML=r+' <span class="req-x" onclick="removeReq('+i+')">✕</span>';c.appendChild(d);});
 }
 
-// ── Exclude list ──
-function renderExcludeList(){
-  const c=document.getElementById('excludeList');
-  const keys=Object.keys(participants);
-  if(!keys.length){ c.innerHTML='<div class="empty"><div class="empty-icon">✅</div>No hay participantes cargados</div>'; return; }
-  c.innerHTML='';
-  keys.sort().forEach(u=>{
-    const p=participants[u];
-    const tag=document.createElement('div');
-    tag.className='tag'+(p.excluded?' excluded':p.autoExcluded?' auto-excluded':'');
-    tag.title=p.autoExcluded?('Auto-filtrado: '+p.autoReason):'';
-    const icon=p.autoExcluded?'🟡 ':p.excluded?'🚫 ':'';
-    tag.innerHTML=icon+u+(p.autoExcluded?' <small style="opacity:.6;font-size:10px">('+p.autoReason+')</small>':'')+'<span class="tag-x">'+(p.excluded?'↩':'✕')+'</span>';
-    tag.onclick=()=>{ participants[u].excluded=!p.excluded; renderExcludeList(); renderTags(); };
-    c.appendChild(tag);
-  });
-}
-
-// ── Summary ──
+// ══════════════════════════════════════════
+// SUMMARY (step 3)
+// ══════════════════════════════════════════
 function renderSummary(){
-  const cfg=getFilterConfig();
   applyFilters();
-  const active=Object.keys(participants).filter(k=>!participants[k].excluded&&!participants[k].autoExcluded);
-  const excl=Object.keys(participants).filter(k=>participants[k].excluded||participants[k].autoExcluded);
-  const already=winners.map(w=>w.name);
+  const active=Object.keys(P).filter(k=>!P[k].manExcluded&&!P[k].autoExcluded);
+  const excl=Object.keys(P).length-active.length;
+  const already=W.map(w=>w.name);
   const elig=active.filter(u=>!already.includes(u));
-  const nw=parseInt(document.getElementById('numWinners').value)||1;
-  const name=document.getElementById('sorteoName').value||'Sorteo sin nombre';
+  const nw=parseInt(document.getElementById('nWin').value)||1;
+  const name=document.getElementById('sName').value||'Sorteo sin nombre';
+  const c=cfg();
+  const fActive=[];
+  if(c.m.on)fActive.push('👥 Mín. '+c.m.val+' menciones');
+  if(c.k.on&&c.k.val)fActive.push('🔤 "'+c.k.val+'"');
+  if(c.w.on)fActive.push('📝 Mín. '+c.w.val+' palabras');
+  if(c.b.on)fActive.push('🤖 Sin bots');
+  if(c.r.on)fActive.push('💬 Sin replies');
 
-  const reqHtml=requisitos.length
-    ?requisitos.map(r=>'<div style="font-size:13px;padding:7px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px">✅ <span>'+r+'</span></div>').join('')
-    :'<div style="font-size:13px;color:var(--muted);font-style:italic">Sin requisitos manuales</div>';
+  const fHtml=fActive.length?'<div style="font-size:12px;font-weight:700;margin:12px 0 6px">Filtros automáticos activos</div>'+fActive.map(f=>'<div style="font-size:12px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:8px">'+f+'</div>').join(''):'';
+  const rHtml=reqs.length?'<div style="font-size:12px;font-weight:700;margin:12px 0 6px">Requisitos manuales</div>'+reqs.map(r=>'<div style="font-size:12px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:8px">✅ '+r+'</div>').join(''):'';
 
-  // Active filters summary
-  const activeFilters=[];
-  if(cfg.mentions.on) activeFilters.push('Mín. '+cfg.mentions.val+' menciones');
-  if(cfg.keyword.on&&cfg.keyword.val) activeFilters.push('Contiene "'+cfg.keyword.val+'"');
-  if(cfg.words.on) activeFilters.push('Mín. '+cfg.words.val+' palabras');
-  if(cfg.bots.on) activeFilters.push('Sin bots');
-  if(cfg.replies.on) activeFilters.push('Sin replies');
-  const filtersHtml=activeFilters.length
-    ?'<div style="font-size:13px;font-weight:700;margin-bottom:8px;margin-top:14px">Filtros automáticos activos</div>'+activeFilters.map(f=>'<div style="font-size:13px;padding:5px 0;border-bottom:1px solid #f3f4f6;display:flex;gap:8px">⚙️ <span>'+f+'</span></div>').join('')
-    :'';
-
-  document.getElementById('summaryCard').innerHTML=`
-    <div class="card-head" style="margin-bottom:10px"><div class="card-icon">📊</div><div class="card-title">Resumen</div></div>
-    <div style="font-size:16px;font-weight:800;margin-bottom:14px">${name}</div>
-    <div class="counter-row" style="margin-bottom:16px">
-      <div class="counter-cell total"><div class="counter-num">${active.length}</div><div class="counter-lbl">participantes</div></div>
-      <div class="counter-cell excl"><div class="counter-num">${excl.length}</div><div class="counter-lbl">excluidos</div></div>
-      <div class="counter-cell elig"><div class="counter-num">${elig.length}</div><div class="counter-lbl">elegibles</div></div>
+  document.getElementById('sumCard').innerHTML=`
+    <div class="card-hd" style="margin-bottom:8px"><div class="card-ico">📊</div><div class="card-ttl">Resumen del sorteo</div></div>
+    <div style="font-size:15px;font-weight:900;margin-bottom:12px">${name}</div>
+    <div class="cnt-grid" style="margin-bottom:0">
+      <div class="cnt-cell tot"><div class="cnt-n">${active.length}</div><div class="cnt-l">participantes</div></div>
+      <div class="cnt-cell exc"><div class="cnt-n">${excl}</div><div class="cnt-l">excluidos</div></div>
+      <div class="cnt-cell elig"><div class="cnt-n">${elig.length}</div><div class="cnt-l">elegibles</div></div>
     </div>
-    ${filtersHtml}
-    <div style="font-size:13px;font-weight:700;margin-bottom:8px;margin-top:14px">Requisitos manuales</div>
-    ${reqHtml}
-    <div style="margin-top:14px;font-size:13px;font-weight:700">Ganadores a sortear: <span style="color:#833ab4">${nw}</span></div>
+    ${fHtml}${rHtml}
+    <div style="margin-top:12px;font-size:12px;font-weight:700">Ganadores a sortear: <span style="color:var(--ig1)">${nw}</span></div>
   `;
-
-  const btn=document.getElementById('sortearBtn');
+  const btn=document.getElementById('sortBtn');
   btn.disabled=elig.length===0;
   btn.innerHTML=elig.length?'🎰 ¡Sortear! — '+elig.length+' elegibles':'Sin participantes elegibles';
-  renderHistorial();
+  renderHist();
 }
 
-// ── Sorteo ──
-function iniciarSorteo(){
-  const active=Object.keys(participants).filter(k=>!participants[k].excluded&&!participants[k].autoExcluded);
-  const already=winners.map(w=>w.name);
+// ══════════════════════════════════════════
+// SORTEO
+// ══════════════════════════════════════════
+function doSorteo(){
+  const active=Object.keys(P).filter(k=>!P[k].manExcluded&&!P[k].autoExcluded);
+  const already=W.map(w=>w.name);
   const elig=active.filter(u=>!already.includes(u));
-  if(!elig.length) return;
-  animateRoulette(elig, elig[Math.floor(Math.random()*elig.length)]);
+  if(!elig.length)return;
+  spinRoulette(elig,elig[Math.floor(Math.random()*elig.length)]);
 }
 
-function animateRoulette(pool,winner){
-  const overlay=document.getElementById('spinOverlay');
-  const list=document.getElementById('rouletteList');
-  overlay.classList.add('show');
+function spinRoulette(pool,winner){
+  const ov=document.getElementById('ovSpin');
+  const list=document.getElementById('rouList');
+  ov.classList.add('show');
   const items=[];
-  for(let i=0;i<30;i++) items.push(pool[Math.floor(Math.random()*pool.length)]);
+  for(let i=0;i<30;i++)items.push(pool[Math.floor(Math.random()*pool.length)]);
   items.push(winner);
-  list.innerHTML=items.map(u=>'<div class="roulette-item">'+u+'</div>').join('');
-  list.style.transition='none'; list.style.transform='translateY(58px)';
+  list.innerHTML=items.map(u=>'<div class="rou-item">'+u+'</div>').join('');
+  list.style.transition='none';list.style.transform='translateY(56px)';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    list.style.transition='transform 3s cubic-bezier(.08,.92,.15,1)';
-    list.style.transform='translateY('+(-(30*44)+58)+'px)';
+    list.style.transition='transform 3.2s cubic-bezier(.05,.9,.12,1)';
+    list.style.transform='translateY('+(-(30*42)+56)+'px)';
   }));
-  setTimeout(()=>{ overlay.classList.remove('show'); showWinner(winner); },3400);
+  setTimeout(()=>{ov.classList.remove('show');revealWinner(winner);},3600);
 }
 
-function showWinner(winner){
-  const nw=parseInt(document.getElementById('numWinners').value)||1;
-  winners.push({name:winner,time:new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})});
+function revealWinner(winner){
+  const nw=parseInt(document.getElementById('nWin').value)||1;
+  W.push({name:winner,time:new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})});
   document.getElementById('wName').textContent=winner;
-  document.getElementById('wSub').textContent='Ganador '+winners.length+' de '+nw;
-  document.getElementById('winOverlay').classList.add('show');
-  launchConfetti(); renderHistorial(); renderSummary();
+  document.getElementById('wSub').textContent='Ganador '+W.length+' de '+nw;
+  document.getElementById('ovWin').classList.add('show');
+  confetti();renderHist();renderSummary();
 }
 
-function closeWin(){ document.getElementById('winOverlay').classList.remove('show'); }
+function closeWin(){document.getElementById('ovWin').classList.remove('show');}
 function sortearOtro(){
   closeWin();
-  const nw=parseInt(document.getElementById('numWinners').value)||1;
-  if(winners.length>=nw){alert('Ya se sortearon los '+nw+' ganadores.');return;}
-  setTimeout(iniciarSorteo,350);
+  const nw=parseInt(document.getElementById('nWin').value)||1;
+  if(W.length>=nw){alert('Ya sorteaste los '+nw+' ganadores.');return;}
+  setTimeout(doSorteo,400);
 }
 
-function renderHistorial(){
-  const card=document.getElementById('histCard');
-  const list=document.getElementById('histList');
-  if(!winners.length){card.style.display='none';return;}
+function renderHist(){
+  const card=document.getElementById('histCard'),list=document.getElementById('histList');
+  if(!W.length){card.style.display='none';return;}
   card.style.display='block';
-  list.innerHTML=winners.map((w,i)=>'<div class="hist-item"><span style="font-weight:600">'+(i+1)+'. <span class="hist-name">'+w.name+'</span></span><span class="hist-time">'+w.time+'</span></div>').join('');
+  list.innerHTML=W.map((w,i)=>'<div class="hist-row"><span><b>'+(i+1)+'.</b> <span class="hist-n">'+w.name+'</span></span><span class="hist-t">'+w.time+'</span></div>').join('');
 }
 
+// ══════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════
 function resetAll(){
-  if(!confirm('¿Resetear todo el sorteo?')) return;
-  participants={}; winners=[]; requisitos=[];
-  document.getElementById('sorteoName').value='';
-  document.getElementById('numWinners').value='1';
-  document.getElementById('loadedBanner').classList.remove('show');
-  // reset filters
-  ['mentions','keyword','words','bots','replies'].forEach(n=>{
-    document.getElementById('ft-'+n).checked=false;
-    onFilterToggle(n);
-  });
-  renderTags(); renderReqs(); renderHistorial(); goStep(1);
+  if(!confirm('¿Resetear todo el sorteo? Se perderán participantes y ganadores.'))return;
+  P={};W=[];reqs=[];
+  document.getElementById('sName').value='';
+  document.getElementById('nWin').value='1';
+  document.getElementById('banner').classList.remove('show');
+  ['m','k','w','b','r'].forEach(id=>{document.getElementById('ft-'+id).checked=false;fToggle(id);});
+  renderTags();renderReqs();renderHist();go(1);
 }
 
-function launchConfetti(){
-  const cvs=document.getElementById('cvs');
-  const ctx=cvs.getContext('2d');
-  cvs.width=innerWidth; cvs.height=innerHeight;
-  const clrs=['#833ab4','#fd1d1d','#fcb045','#f9ca24','#6ab04c','#38bdf8','#f472b6'];
-  const ps=Array.from({length:160},()=>({x:Math.random()*cvs.width,y:-20,r:Math.random()*6+3,d:Math.random()*4+2,c:clrs[Math.floor(Math.random()*clrs.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()<.5}));
+// ══════════════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════════════
+function confetti(){
+  const cv=document.getElementById('cvs'),ctx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const clrs=['#833ab4','#fd1d1d','#fcb045','#f9ca24','#22d3ee','#f472b6','#4ade80'];
+  const ps=Array.from({length:180},()=>({x:Math.random()*cv.width,y:-20,r:Math.random()*6+2,d:Math.random()*4+2,c:clrs[~~(Math.random()*clrs.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()<.5}));
   let f=0;
   (function draw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    ps.forEach(p=>{ctx.fillStyle=p.c;p.ta+=p.ts;p.y+=p.d;p.x+=Math.sin(p.ta)*.9;ctx.beginPath();if(p.sq){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.ta);ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);ctx.restore();}else{ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}});
-    if(++f<200) requestAnimationFrame(draw);
-    else ctx.clearRect(0,0,cvs.width,cvs.height);
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{ctx.fillStyle=p.c;p.ta+=p.ts;p.y+=p.d;p.x+=Math.sin(p.ta)*.9;ctx.beginPath();
+      if(p.sq){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.ta);ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);ctx.restore();}
+      else{ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}});
+    if(++f<220)requestAnimationFrame(draw);else ctx.clearRect(0,0,cv.width,cv.height);
   })();
 }
 
-document.getElementById('reqInput').addEventListener('keydown',e=>{if(e.key==='Enter')addReq();});
-document.getElementById('manualInput').addEventListener('keydown',e=>{if(e.key==='Enter')addManual();});
-document.getElementById('fv-keyword').addEventListener('input',applyFilters);
+// keyboard shortcuts
+document.getElementById('reqIn').addEventListener('keydown',e=>{if(e.key==='Enter')addReq();});
+document.getElementById('manIn').addEventListener('keydown',e=>{if(e.key==='Enter')addManual();});
+document.getElementById('fv-k').addEventListener('input',applyFilters);
 </script>
 </body>
 </html>
