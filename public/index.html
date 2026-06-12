@@ -386,105 +386,134 @@ input:focus,textarea:focus{border-color:var(--ig1);background:#fff;}
 let P = {}, W = [], reqs = [];
 
 // ══════════════════════════════════════════
-// BOOKMARKLET — uses localStorage to avoid URL length limits
+// BOOKMARKLET — postMessage approach (cross-origin safe)
+// The bookmarklet opens the app, waits for it to signal ready,
+// then sends all data via postMessage. No URL limits, no localStorage cross-origin issues.
 // ══════════════════════════════════════════
 (function buildBM(){
-  const APP = window.location.origin + window.location.pathname.replace(/\/[^/]*$/,'/');
+  const APP = window.location.origin + window.location.pathname.split('?')[0];
   const code = `(async()=>{
-  const MAXP=80, DL=ms=>new Promise(r=>setTimeout(r,ms));
+  const MAXP=100, DL=ms=>new Promise(r=>setTimeout(r,ms));
   const sc=(()=>{const m=location.pathname.match(/\\/(?:p|reel|tv)\\/([A-Za-z0-9_-]+)/);return m?m[1]:null;})();
   if(!sc){alert('Abrí una publicación de Instagram primero.');return;}
 
-  // Get mediaId
+  // Toast UI
+  const T=document.createElement('div');
+  T.style.cssText='position:fixed;top:16px;right:16px;z-index:2147483647;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;padding:13px 18px;border-radius:12px;font-family:-apple-system,sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);min-width:240px;text-align:center;line-height:1.5;';
+  T.innerHTML='⏳ Obteniendo ID de publicación...';
+  document.body.appendChild(T);
+
+  // Get mediaId — 3 fallbacks
   let mid;
   try{const r=await fetch('/api/v1/media/'+sc+'/info/',{credentials:'include',headers:{'X-IG-App-ID':'936619743392459'}});
     if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.items?.[0]?.id;}}catch(e){}
   if(!mid){const m=document.documentElement.innerHTML.match(/"media_id":"(\\d+)"/);if(m)mid=m[1];}
   if(!mid){try{const r=await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.graphql?.shortcode_media?.id;}}catch(e){}}
-  if(!mid){alert('No se pudo obtener el ID. Recargá la página de Instagram e intentá de nuevo.');return;}
+  if(!mid){T.innerHTML='❌ No se pudo obtener el ID.<br>Recargá Instagram e intentá de nuevo.';setTimeout(()=>T.remove(),4000);return;}
 
-  const T=document.createElement('div');
-  T.style.cssText='position:fixed;top:16px;right:16px;z-index:2147483647;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;padding:13px 18px;border-radius:12px;font-family:-apple-system,sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.35);min-width:230px;text-align:center;line-height:1.4;';
-  T.textContent='⏳ Conectando...';
-  document.body.appendChild(T);
+  T.innerHTML='⏳ Extrayendo comentarios...<br><span style="font-size:11px;opacity:.8">0 participantes encontrados</span>';
 
-  // Map: lower(username) -> { count, text (last top-level comment), isReply }
-  const U=new Map();
+  // Collect comments
+  const U=new Map(); // username -> {count, text(longest), isReply}
   let total=0;
 
-  function addComment(c,isReply){
+  function addC(c,isReply){
     const u=c?.user?.username;if(!u)return;
     const k=u.toLowerCase();
     const ex=U.get(k)||{count:0,text:'',isReply:true};
     U.set(k,{
       count:ex.count+1,
-      // keep the longest text (most mentions likely)
       text:(c.text||'').length>(ex.text||'').length?(c.text||''):ex.text,
-      isReply:ex.count===0?isReply:ex.isReply // first comment determines type
+      isReply:ex.count===0?!!isReply:ex.isReply
     });
   }
 
   async function fp(extra){
     let url='/api/v1/media/'+mid+'/comments/?can_support_threading=true&permalink_enabled=false';
     if(extra)url+='&'+extra;
-    try{const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
-      if(!r.ok)return null;return r.json();}catch(e){return null;}
+    try{
+      const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
+      if(!r.ok)return null;
+      return r.json();
+    }catch(e){return null;}
   }
 
+  // First page
   const first=await fp(null);
-  if(!first){T.textContent='❌ No se pudo acceder. ¿Publicación pública?';setTimeout(()=>T.remove(),3000);return;}
+  if(!first){T.innerHTML='❌ Sin acceso a comentarios.<br>¿La publicación es pública?';setTimeout(()=>T.remove(),4000);return;}
   total=first?.comment_count||0;
-  (first?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
-  T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
+  (first?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
+  T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
 
+  // Paginate backwards (older)
   let minId=first?.next_min_id,pb=0;
-  while(minId&&pb<MAXP){await DL(280);const d=await fp('min_id='+minId);if(!d)break;
-    (d?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
-    T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
-    const nx=d?.next_min_id;if(!nx||(d?.comments||[]).length===0)break;minId=nx;pb++;}
+  while(minId&&pb<MAXP){
+    await DL(250);
+    const d=await fp('min_id='+minId);if(!d)break;
+    (d?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
+    T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
+    const nx=d?.next_min_id;if(!nx||(d?.comments||[]).length===0)break;minId=nx;pb++;
+  }
 
+  // Paginate forwards (newer)
   let maxId=first?.next_max_id,pf=0;
-  while(maxId&&pf<MAXP){await DL(280);const d=await fp('max_id='+maxId);if(!d)break;
-    (d?.comments||[]).forEach(c=>{addComment(c,false);(c?.preview_child_comments||[]).forEach(r=>addComment(r,true));});
-    T.textContent='⏳ Extrayendo... '+U.size+'/'+total;
-    const nx=d?.next_max_id;if(!nx||(d?.comments||[]).length===0)break;maxId=nx;pf++;}
+  while(maxId&&pf<MAXP){
+    await DL(250);
+    const d=await fp('max_id='+maxId);if(!d)break;
+    (d?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
+    T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
+    const nx=d?.next_max_id;if(!nx||(d?.comments||[]).length===0)break;maxId=nx;pf++;
+  }
 
-  if(U.size===0){T.textContent='❌ No se encontraron comentarios';setTimeout(()=>T.remove(),3000);return;}
-  T.textContent='✅ '+U.size+' participantes. Abriendo app...';
+  if(U.size===0){T.innerHTML='❌ No se encontraron comentarios.';setTimeout(()=>T.remove(),3000);return;}
 
-  // Store in localStorage to avoid URL length limits
-  const payload={users:Object.fromEntries(U),total,ts:Date.now()};
-  try{localStorage.setItem('sorteoig_data',JSON.stringify(payload));}catch(e){T.textContent='❌ Error de almacenamiento';setTimeout(()=>T.remove(),3000);return;}
-  setTimeout(()=>{window.open('${APP}?from=bm','_blank');T.remove();},900);
+  T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Abriendo app de sorteo...</span>';
+
+  // Open app and send data via postMessage (works cross-origin)
+  const payload={type:'SORTEOIG_DATA',users:Object.fromEntries(U),total};
+  const appWin=window.open('${APP}','sorteoig_app');
+
+  // Poll until app signals ready, then send
+  let tries=0;
+  const interval=setInterval(()=>{
+    tries++;
+    try{appWin.postMessage(payload,'${APP}');}catch(e){}
+    if(tries>40)clearInterval(interval); // give up after 20s
+  },500);
+
+  // Also listen for ack from app to stop polling
+  window.addEventListener('message',function ack(e){
+    if(e.origin==='${APP.replace(/\\/$/,'')}' && e.data==='SORTEOIG_ACK'){
+      clearInterval(interval);
+      window.removeEventListener('message',ack);
+      setTimeout(()=>T.remove(),1500);
+      T.innerHTML='✅ Datos enviados correctamente.';
+    }
+  });
 })();`;
   document.getElementById('bmLink').href='javascript:'+encodeURIComponent(code);
 })();
 
 // ══════════════════════════════════════════
-// READ DATA from localStorage
+// RECEIVE DATA via postMessage from bookmarklet
 // ══════════════════════════════════════════
-(function readData(){
-  const fromBm=new URLSearchParams(location.search).get('from')==='bm';
-  if(!fromBm)return;
-  window.history.replaceState({},'',location.pathname);
-  try{
-    const raw=localStorage.getItem('sorteoig_data');
-    if(!raw)return;
-    const d=JSON.parse(raw);
-    if(!d.users)return;
-    // Check freshness (10 min)
-    if(Date.now()-d.ts>10*60*1000){localStorage.removeItem('sorteoig_data');return;}
-    P={};
-    Object.entries(d.users).forEach(([u,v])=>{
-      P['@'+u]={count:v.count||1,text:v.text||'',isReply:!!v.isReply,manExcluded:false,autoExcluded:false,autoReason:''};
-    });
-    const total=d.total||Object.keys(P).length;
-    document.getElementById('banner').classList.add('show');
-    document.getElementById('bannerMsg').textContent=Object.keys(P).length+' participantes únicos cargados ('+total+' comentarios totales)';
-    localStorage.removeItem('sorteoig_data');
-    renderTags();
-  }catch(e){console.error('readData error',e);}
-})();
+window.addEventListener('message', function(e){
+  if(!e.data || e.data.type !== 'SORTEOIG_DATA') return;
+  // Send ACK back so bookmarklet stops polling
+  try{ e.source.postMessage('SORTEOIG_ACK', e.origin); }catch(err){}
+  const d = e.data;
+  if(!d.users) return;
+  P={};
+  Object.entries(d.users).forEach(([u,v])=>{
+    P['@'+u]={count:v.count||1,text:v.text||'',isReply:!!v.isReply,manExcluded:false,autoExcluded:false,autoReason:''};
+  });
+  const total=d.total||Object.keys(P).length;
+  document.getElementById('banner').classList.add('show');
+  document.getElementById('bannerMsg').textContent=Object.keys(P).length+' participantes únicos cargados ('+total+' comentarios totales)';
+  renderTags();
+  // Make sure we're on step 1
+  go(1);
+});
 
 // ══════════════════════════════════════════
 // NAVIGATION
