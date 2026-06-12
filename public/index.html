@@ -469,27 +469,35 @@ let P = {}, W = [], reqs = [];
 
   T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Abriendo app de sorteo...</span>';
 
-  // Open app and send data via postMessage (works cross-origin)
+  // Open app — wait for READY signal, then send data once
   const payload={type:'SORTEOIG_DATA',users:Object.fromEntries(U),total};
+  const ORIGIN='${APP}'.replace(/\/$/,'');
   const appWin=window.open('${APP}','sorteoig_app');
 
-  // Poll until app signals ready, then send
-  let tries=0;
-  const interval=setInterval(()=>{
-    tries++;
-    try{appWin.postMessage(payload,'${APP}');}catch(e){}
-    if(tries>40)clearInterval(interval); // give up after 20s
-  },500);
+  T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Esperando que cargue la app...</span>';
 
-  // Also listen for ack from app to stop polling
-  window.addEventListener('message',function ack(e){
-    if(e.origin==='${APP.replace(/\\/$/,'')}' && e.data==='SORTEOIG_ACK'){
-      clearInterval(interval);
-      window.removeEventListener('message',ack);
-      setTimeout(()=>T.remove(),1500);
-      T.innerHTML='✅ Datos enviados correctamente.';
-    }
+  // Primary: listen for READY handshake from app
+  let sent=false;
+  function sendPayload(){
+    if(sent)return; sent=true;
+    try{appWin.postMessage(payload,ORIGIN);}catch(e){}
+    T.innerHTML='✅ '+U.size+' participantes enviados.';
+    setTimeout(()=>T.remove(),2000);
+  }
+
+  window.addEventListener('message',function handler(e){
+    if(e.origin!==ORIGIN)return;
+    if(e.data==='SORTEOIG_READY'){window.removeEventListener('message',handler);sendPayload();}
+    if(e.data==='SORTEOIG_ACK'){window.removeEventListener('message',handler);}
   });
+
+  // Fallback: send every 600ms for 8s in case app was already loaded
+  let fb=0;
+  const fbi=setInterval(()=>{
+    fb++;
+    if(!sent){try{appWin.postMessage(payload,ORIGIN);}catch(e){}}
+    if(fb>=14){clearInterval(fbi);}
+  },600);
 })();`;
   document.getElementById('bmLink').href='javascript:'+encodeURIComponent(code);
 })();
@@ -497,9 +505,22 @@ let P = {}, W = [], reqs = [];
 // ══════════════════════════════════════════
 // RECEIVE DATA via postMessage from bookmarklet
 // ══════════════════════════════════════════
+let dataReceived = false;
+
+// Signal to bookmarklet that the app is ready to receive
+function signalReady(){
+  try{
+    // Signal to opener (if opened by bookmarklet)
+    if(window.opener) window.opener.postMessage('SORTEOIG_READY', '*');
+  }catch(e){}
+}
+
+// Listen for data from bookmarklet
 window.addEventListener('message', function(e){
   if(!e.data || e.data.type !== 'SORTEOIG_DATA') return;
-  // Send ACK back so bookmarklet stops polling
+  if(dataReceived) return; // ignore duplicates from fallback polling
+  dataReceived = true;
+  // ACK so bookmarklet stops sending
   try{ e.source.postMessage('SORTEOIG_ACK', e.origin); }catch(err){}
   const d = e.data;
   if(!d.users) return;
@@ -511,9 +532,14 @@ window.addEventListener('message', function(e){
   document.getElementById('banner').classList.add('show');
   document.getElementById('bannerMsg').textContent=Object.keys(P).length+' participantes únicos cargados ('+total+' comentarios totales)';
   renderTags();
-  // Make sure we're on step 1
   go(1);
 });
+
+// Fire READY as soon as possible
+signalReady();
+// Also fire after a short delay in case opener wasn't ready
+setTimeout(signalReady, 300);
+setTimeout(signalReady, 800);
 
 // ══════════════════════════════════════════
 // NAVIGATION
