@@ -428,11 +428,21 @@ let P = {}, W = [], reqs = [];
       isReply:ex.count===0?!!isReply:ex.isReply});
   }
 
-  async function fp(extra){
+  // next_min_id can be a string OR a JSON object — handle both
+  function encodeMinId(minId){
+    if(!minId) return null;
+    if(typeof minId==='object') return encodeURIComponent(JSON.stringify(minId));
+    return encodeURIComponent(String(minId));
+  }
+
+  async function fp(minId){
     let url='/api/v1/media/'+mid+'/comments/?can_support_threading=true&permalink_enabled=false';
-    if(extra)url+='&'+extra;
-    try{const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
-      if(!r.ok)return null;return r.json();}catch(e){return null;}
+    if(minId) url+='&min_id='+encodeMinId(minId);
+    try{
+      const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
+      if(!r.ok) return null;
+      return r.json();
+    }catch(e){return null;}
   }
 
   const first=await fp(null);
@@ -441,56 +451,18 @@ let P = {}, W = [], reqs = [];
   (first?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
   T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
 
-  // Paginate using next_min_id (goes backwards through older comments)
-  let minId=first?.next_min_id, pb=0;
-  while(minId && pb<MAXP){
+  // Paginate using next_min_id — can be string or object cursor
+  let cursor=first?.next_min_id, page=0;
+  while(cursor && page<MAXP){
     await DL(300);
-    const d=await fp('min_id='+minId);
+    const d=await fp(cursor);
     if(!d) break;
     const comments=d?.comments||[];
+    if(comments.length===0) break;
     comments.forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
     T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
-    const nx=d?.next_min_id;
-    if(!nx || comments.length===0) break;
-    minId=nx; pb++;
-  }
-
-  // Also paginate using next_max_id (goes forwards through newer comments)
-  let maxId=first?.next_max_id, pf=0;
-  while(maxId && pf<MAXP){
-    await DL(300);
-    const d=await fp('max_id='+maxId);
-    if(!d) break;
-    const comments=d?.comments||[];
-    comments.forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-    T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
-    const nx=d?.next_max_id;
-    if(!nx || comments.length===0) break;
-    maxId=nx; pf++;
-  }
-
-  // If still missing comments, try fetching with just max_id from scratch using different cursor
-  if(U.size < total*0.85){
-    // Try cursor-based pagination starting from scratch going backwards
-    let cursor=null, extra=0;
-    // Get the oldest comment's id from what we have and paginate from there
-    const tryRes=await fp('max_id=0');
-    if(tryRes){
-      const comments2=tryRes?.comments||[];
-      comments2.forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-      let cur2=tryRes?.next_max_id;
-      while(cur2 && extra<MAXP){
-        await DL(300);
-        const d2=await fp('max_id='+cur2);
-        if(!d2) break;
-        const comments3=d2?.comments||[];
-        comments3.forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-        T.innerHTML='⏳ Completando...<br><b>'+U.size+'</b> de ~'+total+' participantes';
-        const nx2=d2?.next_max_id;
-        if(!nx2 || comments3.length===0) break;
-        cur2=nx2; extra++;
-      }
-    }
+    cursor=d?.next_min_id||null;
+    page++;
   }
 
   if(U.size===0){T.innerHTML='❌ No se encontraron comentarios.';setTimeout(()=>T.remove(),3000);return;}
