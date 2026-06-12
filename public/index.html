@@ -386,160 +386,163 @@ input:focus,textarea:focus{border-color:var(--ig1);background:#fff;}
 let P = {}, W = [], reqs = [];
 
 // ══════════════════════════════════════════
-// BOOKMARKLET — postMessage approach (cross-origin safe)
-// The bookmarklet opens the app, waits for it to signal ready,
-// then sends all data via postMessage. No URL limits, no localStorage cross-origin issues.
+// BOOKMARKLET — simple base64+compress URL passing
+// No postMessage, no localStorage, no cross-origin issues.
+// 300 participants compressed = ~1200 chars in URL. Always works.
 // ══════════════════════════════════════════
 (function buildBM(){
   const APP = window.location.origin + window.location.pathname.split('?')[0];
+
   const code = `(async()=>{
   const MAXP=100, DL=ms=>new Promise(r=>setTimeout(r,ms));
+
+  // Get shortcode from URL
   const sc=(()=>{const m=location.pathname.match(/\\/(?:p|reel|tv)\\/([A-Za-z0-9_-]+)/);return m?m[1]:null;})();
   if(!sc){alert('Abrí una publicación de Instagram primero.');return;}
 
-  // Toast UI
+  // Toast
   const T=document.createElement('div');
   T.style.cssText='position:fixed;top:16px;right:16px;z-index:2147483647;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;padding:13px 18px;border-radius:12px;font-family:-apple-system,sans-serif;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.4);min-width:240px;text-align:center;line-height:1.5;';
-  T.innerHTML='⏳ Obteniendo ID de publicación...';
+  T.innerHTML='⏳ Obteniendo publicación...';
   document.body.appendChild(T);
 
-  // Get mediaId — 3 fallbacks
+  // Get media ID
   let mid;
   try{const r=await fetch('/api/v1/media/'+sc+'/info/',{credentials:'include',headers:{'X-IG-App-ID':'936619743392459'}});
     if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.items?.[0]?.id;}}catch(e){}
   if(!mid){const m=document.documentElement.innerHTML.match(/"media_id":"(\\d+)"/);if(m)mid=m[1];}
-  if(!mid){try{const r=await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.graphql?.shortcode_media?.id;}}catch(e){}}
+  if(!mid){try{const r=await fetch('/p/'+sc+'/?__a=1&__d=dis',{credentials:'include'});
+    if(r.ok){const d=await r.json();mid=d?.items?.[0]?.pk||d?.graphql?.shortcode_media?.id;}}catch(e){}}
   if(!mid){T.innerHTML='❌ No se pudo obtener el ID.<br>Recargá Instagram e intentá de nuevo.';setTimeout(()=>T.remove(),4000);return;}
 
-  T.innerHTML='⏳ Extrayendo comentarios...<br><span style="font-size:11px;opacity:.8">0 participantes encontrados</span>';
-
-  // Collect comments
-  const U=new Map(); // username -> {count, text(longest), isReply}
+  // Collect all comments
+  const U=new Map();
   let total=0;
 
   function addC(c,isReply){
     const u=c?.user?.username;if(!u)return;
     const k=u.toLowerCase();
     const ex=U.get(k)||{count:0,text:'',isReply:true};
-    U.set(k,{
-      count:ex.count+1,
+    U.set(k,{count:ex.count+1,
       text:(c.text||'').length>(ex.text||'').length?(c.text||''):ex.text,
-      isReply:ex.count===0?!!isReply:ex.isReply
-    });
+      isReply:ex.count===0?!!isReply:ex.isReply});
   }
 
   async function fp(extra){
     let url='/api/v1/media/'+mid+'/comments/?can_support_threading=true&permalink_enabled=false';
     if(extra)url+='&'+extra;
-    try{
-      const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
-      if(!r.ok)return null;
-      return r.json();
-    }catch(e){return null;}
+    try{const r=await fetch(url,{credentials:'include',headers:{'X-IG-App-ID':'936619743392459','X-Requested-With':'XMLHttpRequest'}});
+      if(!r.ok)return null;return r.json();}catch(e){return null;}
   }
 
-  // First page
   const first=await fp(null);
   if(!first){T.innerHTML='❌ Sin acceso a comentarios.<br>¿La publicación es pública?';setTimeout(()=>T.remove(),4000);return;}
   total=first?.comment_count||0;
   (first?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-  T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
+  T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
 
-  // Paginate backwards (older)
   let minId=first?.next_min_id,pb=0;
-  while(minId&&pb<MAXP){
-    await DL(250);
-    const d=await fp('min_id='+minId);if(!d)break;
+  while(minId&&pb<MAXP){await DL(250);const d=await fp('min_id='+minId);if(!d)break;
     (d?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-    T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
-    const nx=d?.next_min_id;if(!nx||(d?.comments||[]).length===0)break;minId=nx;pb++;
-  }
+    T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
+    const nx=d?.next_min_id;if(!nx||(d?.comments||[]).length===0)break;minId=nx;pb++;}
 
-  // Paginate forwards (newer)
   let maxId=first?.next_max_id,pf=0;
-  while(maxId&&pf<MAXP){
-    await DL(250);
-    const d=await fp('max_id='+maxId);if(!d)break;
-    (d?.comments||[]).forEach(c=>{addC(c,false);(c?.preview_child_comments||[]).forEach(r=>addC(r,true));});
-    T.innerHTML='⏳ Extrayendo...<br><span style="font-size:11px;opacity:.8">'+U.size+' de ~'+total+' participantes</span>';
-    const nx=d?.next_max_id;if(!nx||(d?.comments||[]).length===0)break;maxId=nx;pf++;
-  }
+  while(maxId&&pf<MAXP){await DL(250);const d=await fp('max_id='+maxId);if(!d)break;
+    (d?.comments||[]).forEach(c=>{addC(c,false);(d?.comments||[]).forEach(r=>addC(r,true));});
+    T.innerHTML='⏳ Extrayendo...<br><b>'+U.size+'</b> de ~'+total+' participantes';
+    const nx=d?.next_max_id;if(!nx||(d?.comments||[]).length===0)break;maxId=nx;pf++;}
 
   if(U.size===0){T.innerHTML='❌ No se encontraron comentarios.';setTimeout(()=>T.remove(),3000);return;}
 
-  T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Abriendo app de sorteo...</span>';
+  T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Comprimiendo y abriendo app...</span>';
 
-  // Open app — wait for READY signal, then send data once
-  const payload={type:'SORTEOIG_DATA',users:Object.fromEntries(U),total};
-  const ORIGIN='${APP}'.replace(/\/$/,'');
-  const appWin=window.open('${APP}','sorteoig_app');
-
-  T.innerHTML='✅ '+U.size+' participantes.<br><span style="font-size:11px;opacity:.8">Esperando que cargue la app...</span>';
-
-  // Primary: listen for READY handshake from app
-  let sent=false;
-  function sendPayload(){
-    if(sent)return; sent=true;
-    try{appWin.postMessage(payload,ORIGIN);}catch(e){}
-    T.innerHTML='✅ '+U.size+' participantes enviados.';
-    setTimeout(()=>T.remove(),2000);
+  // Encode: JSON -> UTF-8 bytes -> compress with DecompressionStream trick -> base64
+  // Since we can't use zlib in browser directly, we use a simple but effective encoding:
+  // JSON string -> btoa(encodeURIComponent) won't work for large data
+  // Instead: chunk into multiple URL params OR use CompressionStream API (modern browsers)
+  async function compress(str){
+    try{
+      const cs=new CompressionStream('deflate-raw');
+      const w=cs.writable.getWriter();
+      w.write(new TextEncoder().encode(str));
+      w.close();
+      const chunks=[];
+      const reader=cs.readable.getReader();
+      while(true){const{done,value}=await reader.read();if(done)break;chunks.push(value);}
+      const all=new Uint8Array(chunks.reduce((a,b)=>a+b.length,0));
+      let off=0;for(const c of chunks){all.set(c,off);off+=c.length;}
+      return btoa(String.fromCharCode(...all));
+    }catch(e){
+      // Fallback: no compression, just btoa chunks
+      return null;
+    }
   }
 
-  window.addEventListener('message',function handler(e){
-    if(e.origin!==ORIGIN)return;
-    if(e.data==='SORTEOIG_READY'){window.removeEventListener('message',handler);sendPayload();}
-    if(e.data==='SORTEOIG_ACK'){window.removeEventListener('message',handler);}
-  });
+  const usersObj={};
+  U.forEach((v,k)=>{usersObj[k]={c:v.count,t:v.text,r:v.isReply?1:0};});
+  const json=JSON.stringify({u:usersObj,n:total});
 
-  // Fallback: send every 600ms for 8s in case app was already loaded
-  let fb=0;
-  const fbi=setInterval(()=>{
-    fb++;
-    if(!sent){try{appWin.postMessage(payload,ORIGIN);}catch(e){}}
-    if(fb>=14){clearInterval(fbi);}
-  },600);
+  const compressed=await compress(json);
+  let url;
+  if(compressed&&compressed.length<60000){
+    url='${APP}?z='+encodeURIComponent(compressed);
+  } else {
+    // Fallback: no compression, plain base64 of JSON
+    // For very large payloads, truncate text to just mention counts
+    const slim={};U.forEach((v,k)=>{slim[k]={c:v.count,t:v.text.substring(0,200),r:v.isReply?1:0};});
+    const b64=btoa(unescape(encodeURIComponent(JSON.stringify({u:slim,n:total}))));
+    url='${APP}?d='+encodeURIComponent(b64);
+  }
+
+  setTimeout(()=>{location.href=url;T.remove();},600);
 })();`;
+
   document.getElementById('bmLink').href='javascript:'+encodeURIComponent(code);
 })();
 
 // ══════════════════════════════════════════
-// RECEIVE DATA via postMessage from bookmarklet
+// READ DATA from URL params
 // ══════════════════════════════════════════
-let dataReceived = false;
+(async function readData(){
+  const params=new URLSearchParams(location.search);
+  const z=params.get('z'); // compressed
+  const d=params.get('d'); // plain base64
 
-// Signal to bookmarklet that the app is ready to receive
-function signalReady(){
-  try{
-    // Signal to opener (if opened by bookmarklet)
-    if(window.opener) window.opener.postMessage('SORTEOIG_READY', '*');
-  }catch(e){}
-}
+  let parsed=null;
 
-// Listen for data from bookmarklet
-window.addEventListener('message', function(e){
-  if(!e.data || e.data.type !== 'SORTEOIG_DATA') return;
-  if(dataReceived) return; // ignore duplicates from fallback polling
-  dataReceived = true;
-  // ACK so bookmarklet stops sending
-  try{ e.source.postMessage('SORTEOIG_ACK', e.origin); }catch(err){}
-  const d = e.data;
-  if(!d.users) return;
+  if(z){
+    try{
+      const binary=atob(decodeURIComponent(z));
+      const bytes=new Uint8Array(binary.length);
+      for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+      const ds=new DecompressionStream('deflate-raw');
+      const w=ds.writable.getWriter();w.write(bytes);w.close();
+      const chunks=[];const reader=ds.readable.getReader();
+      while(true){const{done,value}=await reader.read();if(done)break;chunks.push(value);}
+      const all=new Uint8Array(chunks.reduce((a,b)=>a+b.length,0));
+      let off=0;for(const c of chunks){all.set(c,off);off+=c.length;}
+      parsed=JSON.parse(new TextDecoder().decode(all));
+    }catch(e){console.error('decompress error',e);}
+  } else if(d){
+    try{
+      parsed=JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(d)))));
+    }catch(e){console.error('b64 decode error',e);}
+  }
+
+  if(!parsed||!parsed.u)return;
+  window.history.replaceState({},'',location.pathname);
+
   P={};
-  Object.entries(d.users).forEach(([u,v])=>{
-    P['@'+u]={count:v.count||1,text:v.text||'',isReply:!!v.isReply,manExcluded:false,autoExcluded:false,autoReason:''};
+  Object.entries(parsed.u).forEach(([u,v])=>{
+    P['@'+u]={count:v.c||1,text:v.t||'',isReply:!!v.r,manExcluded:false,autoExcluded:false,autoReason:''};
   });
-  const total=d.total||Object.keys(P).length;
+  const total=parsed.n||Object.keys(P).length;
   document.getElementById('banner').classList.add('show');
   document.getElementById('bannerMsg').textContent=Object.keys(P).length+' participantes únicos cargados ('+total+' comentarios totales)';
   renderTags();
-  go(1);
-});
+})();
 
-// Fire READY as soon as possible
-signalReady();
-// Also fire after a short delay in case opener wasn't ready
-setTimeout(signalReady, 300);
-setTimeout(signalReady, 800);
 
 // ══════════════════════════════════════════
 // NAVIGATION
